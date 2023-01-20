@@ -4,6 +4,7 @@ using UnityEngine;
 
 public class SneakControl : MonoBehaviour
 {
+    [SerializeField]
     Rigidbody sneakHead;
     [SerializeField]
     Rigidbody sneakTail;
@@ -26,15 +27,29 @@ public class SneakControl : MonoBehaviour
     [SerializeField]
     GameObject rotationSphere;
 
+    //для генерации змейки
+    SneakUpgrades upgrades;
     [SerializeField]
     bool isGenerated;
     [SerializeField]
     int sneakSize;
     [SerializeField]
     GameObject bodyPrefab;
-    float spawnDistance = 0.069f;
     [SerializeField]
-    int bodyCameraCenter;    
+    GameObject headPrefab;
+    [SerializeField]
+    GameObject tailPrefab;
+    float bodiesInterval = 0.02f;
+    float bodyZscale = 0.05f;
+    [SerializeField]
+    int bodyCameraCenter;
+    float SpawnDistance
+    {
+        get 
+        {
+            return (bodiesInterval + bodyZscale - 0.001f);
+        }
+    }
 
     //для механики перемещения змеи в воздухе
     [SerializeField]
@@ -44,11 +59,14 @@ public class SneakControl : MonoBehaviour
     bool sneakHeadSpacing; //состояние механики
     [SerializeField]
     int bodySupportPoint;
+    [SerializeField]
     GameObject bodySupportObject;
     [SerializeField]
     Material supportBodyMaterial;
     [SerializeField]
     Material defaultBodyMaterial;
+    [SerializeField]
+    Material defaultTailMaterial;
     [SerializeField]
     float headSpacingForce;
     [SerializeField]
@@ -63,34 +81,15 @@ public class SneakControl : MonoBehaviour
     
     void Start()
     {
-        sneakHead = GetComponent<Rigidbody>();
-        List<Rigidbody> list = new List<Rigidbody>();
+        upgrades = GetComponent<SneakUpgrades>();
 
         if (isGenerated)
         {
-            for (int i = 0; i < sneakSize; i++)
-            {
-                GameObject newBody = Instantiate(bodyPrefab);
-                newBody.name = "Sneak Body " + i;
-                Rigidbody newRb = newBody.GetComponent<Rigidbody>();
-                Joint joint = newBody.GetComponent<Joint>();
-                if(i == 0)
-                {
-                    joint.connectedBody = sneakHead;
-                    newBody.transform.position = sneakHead.transform.position - new Vector3(0f, 0f, spawnDistance);
-                }
-                else
-                {
-                    joint.connectedBody = list[i - 1];
-                    newBody.transform.position = list[i-1].transform.position - new Vector3(0f, 0f, spawnDistance);
-                }
-                list.Add(newRb);
-            }
-            sneakTail.GetComponent<Joint>().connectedBody = list[list.Count-1];
-            sneakTail.transform.position = list[list.Count-1].transform.position - new Vector3(0f, 0f, spawnDistance);
+            GenerateSneak();
         }
         else
         {
+            List<Rigidbody> list = new List<Rigidbody>();
             Joint joint = sneakTail.GetComponent<Joint>();
             Rigidbody connectedBody = joint.connectedBody;
             do
@@ -100,14 +99,14 @@ public class SneakControl : MonoBehaviour
                 joint = connectedBody.GetComponent<Joint>();
             }
             while (joint != null);
+
+            list.Add(sneakTail);
+            sneakBody = list;
+
+            rotationSphere.GetComponentInChildren<SneakCamera>().viewObject = sneakBody[bodyCameraCenter].gameObject;
+
+            SetNewSupportBody(bodySupportPoint);
         }
-        
-        list.Add(sneakTail);
-        sneakBody = list;
-
-        rotationSphere.GetComponentInChildren<SneakCamera>().viewObject = sneakBody[bodyCameraCenter].gameObject;
-
-        SetNewSupportBody(bodySupportPoint);
     }
 
     void Update()
@@ -230,10 +229,10 @@ public class SneakControl : MonoBehaviour
                 float bodySpring; //процентное сжатие между позвонками
                 //определение степени сжатия
                 if (i > 0)
-                    bodySpring = (Vector3.Distance(sneakBody[i].transform.position, sneakBody[i - 1].transform.position) - 0.05f) / 0.02f;
+                    bodySpring = (Vector3.Distance(sneakBody[i].transform.position, sneakBody[i - 1].transform.position) - bodyZscale) / bodiesInterval;
                 else
                 {
-                    bodySpring = (Vector3.Distance(sneakBody[i].transform.position, sneakHead.transform.position) - 0.05f) / 0.02f;
+                    bodySpring = (Vector3.Distance(sneakBody[i].transform.position, sneakHead.transform.position) - bodyZscale) / bodiesInterval;
                 }
                 bodySpring = 1 - bodySpring;
                 
@@ -340,5 +339,86 @@ public class SneakControl : MonoBehaviour
                 value = 0f;
             _bodyForceControl = value;
         }
+    }
+
+    public void GenerateSneak()
+    {
+        List<Rigidbody> list = new List<Rigidbody>();
+        //иниициализация параметров змейки
+        SneakUpgrades.LengthLevel parameters = upgrades.lengthLevels[upgrades.currentLengthLevel];
+        forcePerBody = parameters.forcePerBody;
+        headForce = parameters.headForce;
+        headSpacingForce = parameters.headSpacingForce;
+        sneakSize = parameters.bodiesCount;
+        bodyZscale = parameters.bodyZScale;
+        bodiesInterval = parameters.bodiesInterval;
+
+        if (parameters.lengthLevel == 2)
+        {
+            bodyPrefab = upgrades.bodyPrefab2;
+            headPrefab = upgrades.headPrefab2;
+            tailPrefab = upgrades.tailPrefab2;
+        }
+
+        if (parameters.lengthLevel == 3)
+        {
+            bodyPrefab = upgrades.bodyPrefab3;
+            headPrefab = upgrades.headPrefab3;
+            tailPrefab = upgrades.tailPrefab3;
+        }
+
+        //создание головы
+        GameObject head = Instantiate(headPrefab);
+        head.transform.position = transform.position;
+        head.transform.parent = transform;
+        sneakHead = head.GetComponent<Rigidbody>();
+
+        //создание тела
+        for (int i = 0; i < sneakSize; i++)
+        {
+            GameObject newBody = Instantiate(bodyPrefab);
+            newBody.transform.parent = transform;
+            newBody.name = "Sneak Body " + i;
+            Rigidbody newRb = newBody.GetComponent<Rigidbody>();
+            Joint joint = newBody.GetComponent<Joint>();
+            if (i == 0)
+            {
+                joint.connectedBody = sneakHead;
+                newBody.transform.position = sneakHead.transform.position - new Vector3(0f, 0f, SpawnDistance);
+            }
+            else
+            {
+                joint.connectedBody = list[i - 1];
+                newBody.transform.position = list[i - 1].transform.position - new Vector3(0f, 0f, SpawnDistance);
+            }
+            list.Add(newRb);
+        }
+
+        //присоединение хвоста
+        GameObject tail = Instantiate(tailPrefab);
+        tail.transform.parent = transform;
+        sneakTail = tail.GetComponent<Rigidbody>();
+
+        sneakTail.GetComponent<Joint>().connectedBody = list[list.Count - 1];
+        sneakTail.transform.position = list[list.Count - 1].transform.position - new Vector3(0f, 0f, SpawnDistance);
+        list.Add(sneakTail);
+        sneakBody = list;
+
+        //камера
+        bodyCameraCenter = sneakSize / 2;
+        rotationSphere.GetComponentInChildren<SneakCamera>().viewObject = sneakBody[bodyCameraCenter].gameObject;
+        //позвонок для опоры
+        SetNewSupportBody(sneakSize / 2);
+    }
+
+    public void DestroySneak()
+    {
+        Destroy(sneakHead.gameObject);
+        Destroy(sneakTail.gameObject);
+        for(int i = 0; i < sneakSize; i++)
+        {
+            Destroy(sneakBody[i].gameObject);
+        }
+        sneakBody.Clear();
     }
 }

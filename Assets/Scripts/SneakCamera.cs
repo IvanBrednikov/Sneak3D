@@ -28,6 +28,7 @@ public class SneakCamera : MonoBehaviour
         Camera cam = GetComponent<Camera>();
         cam.depth = depthOnStart;
         rotationSphere.transform.parent = null;
+
         Cursor.lockState = CursorLockMode.Locked;
         Cursor.visible = false;
     }
@@ -35,7 +36,7 @@ public class SneakCamera : MonoBehaviour
     
     void Update()
     {
-        //движение каеры за целью
+        //движение камеры за целью
         if (viewObject != null)
             rotationSphere.transform.position =
                 viewObject.transform.position;
@@ -44,7 +45,7 @@ public class SneakCamera : MonoBehaviour
         float xMouseMove = Input.GetAxis("Mouse X") * mouseSenseControlCamera;
         float yMouseMove = Input.GetAxis("Mouse Y") * mouseSenseControlCamera;
 
-        if (Input.GetButton("Fire1"))
+        if (Input.GetButton("Fire1") || Cursor.visible)
         {
             xMouseMove = 0;
             yMouseMove = 0;
@@ -99,5 +100,19 @@ public class SneakCamera : MonoBehaviour
 
         if (newDistance < maxDistance && newDistance > minDistance)
             distance = newDistance;
+
+        if(Input.GetButtonDown("ToggleCursor"))
+        {
+            Cursor.visible = !Cursor.visible;
+            if (Cursor.visible)
+            {
+                Cursor.lockState = CursorLockMode.Confined;
+
+            }
+            else
+            {
+                Cursor.lockState = CursorLockMode.Locked;
+            }
+        }
     }
 }
