@@ -78,10 +78,19 @@ public class SneakControl : MonoBehaviour
     bool headFixed;
     FixedJoint headJoint;
     Collider lastHeadCollision;
+
+    //для скина змейки
+    [SerializeField]
+    GameObject skinPrefab;
+    GameObject skinObject;
+    SkinnedMeshRenderer skinMesh;
+    [SerializeField]
+    bool useSkin = true;
     
     void Start()
     {
         upgrades = GetComponent<SneakUpgrades>();
+        skinMesh = GetComponentInChildren<SkinnedMeshRenderer>();
 
         if (isGenerated)
         {
@@ -344,6 +353,7 @@ public class SneakControl : MonoBehaviour
     public void GenerateSneak()
     {
         List<Rigidbody> list = new List<Rigidbody>();
+
         //иниициализация параметров змейки
         SneakUpgrades.LengthLevel parameters = upgrades.lengthLevels[upgrades.currentLengthLevel];
         forcePerBody = parameters.forcePerBody;
@@ -352,12 +362,19 @@ public class SneakControl : MonoBehaviour
         sneakSize = parameters.bodiesCount;
         bodyZscale = parameters.bodyZScale;
         bodiesInterval = parameters.bodiesInterval;
+        skinPrefab = upgrades.sneakSkin0;
+
+        if(parameters.lengthLevel == 1)
+        {
+            skinPrefab = upgrades.sneakSkin1;
+        }
 
         if (parameters.lengthLevel == 2)
         {
             bodyPrefab = upgrades.bodyPrefab2;
             headPrefab = upgrades.headPrefab2;
             tailPrefab = upgrades.tailPrefab2;
+            skinPrefab = upgrades.sneakSkin2;
         }
 
         if (parameters.lengthLevel == 3)
@@ -365,7 +382,9 @@ public class SneakControl : MonoBehaviour
             bodyPrefab = upgrades.bodyPrefab3;
             headPrefab = upgrades.headPrefab3;
             tailPrefab = upgrades.tailPrefab3;
+            skinPrefab = upgrades.sneakSkin3;
         }
+        //конец инициализации
 
         //создание головы
         GameObject head = Instantiate(headPrefab);
@@ -409,6 +428,38 @@ public class SneakControl : MonoBehaviour
         rotationSphere.GetComponentInChildren<SneakCamera>().viewObject = sneakBody[bodyCameraCenter].gameObject;
         //позвонок для опоры
         SetNewSupportBody(sneakSize / 2);
+
+        //настройка модельки змеи
+        if(useSkin)
+        {
+            //создание модельки змеи
+            skinObject = Instantiate(skinPrefab);
+            skinMesh = skinObject.GetComponent<SkinnedMeshRenderer>();
+            skinObject.transform.rotation = Quaternion.Euler(-90f, -90f, 0f);
+            skinObject.transform.position = transform.position;
+            skinObject.transform.parent = transform;
+
+            //добавление костей для кожи змеи
+            Transform[] bones = skinMesh.bones;
+            //кость головы
+            bones[0].transform.parent = sneakHead.transform;
+            bones[0].transform.localPosition = Vector3.zero;
+            sneakHead.GetComponent<MeshRenderer>().enabled = false;
+            int listIndex = 0;
+            //кости тела
+            for (int boneIndex = 1; boneIndex < bones.Length - 1; boneIndex++)
+            {
+                bones[boneIndex].parent = list[listIndex].transform;
+                bones[boneIndex].transform.localPosition = Vector3.zero;
+                list[listIndex].GetComponent<MeshRenderer>().enabled = false;
+                listIndex++;
+            }
+            //кость хвоста
+            bones[bones.Length - 1].transform.parent = sneakTail.transform;
+            bones[bones.Length - 1].transform.localPosition = Vector3.zero;
+            sneakTail.GetComponent<MeshRenderer>().enabled = false;
+            skinMesh.bones = bones;
+        }
     }
 
     public void DestroySneak()

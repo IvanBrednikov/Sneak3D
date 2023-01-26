@@ -16,6 +16,10 @@ public class SneakUpgrades : MonoBehaviour
     public GameObject tailPrefab1;
     public GameObject tailPrefab2;
     public GameObject tailPrefab3;
+    public GameObject sneakSkin0;
+    public GameObject sneakSkin1;
+    public GameObject sneakSkin2;
+    public GameObject sneakSkin3;
 
     private void Start()
     {
