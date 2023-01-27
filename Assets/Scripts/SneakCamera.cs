@@ -23,6 +23,12 @@ public class SneakCamera : MonoBehaviour
 
     Collider otherCollider; //коллайдер объекта с которым пересекается триггер камеры
 
+    //GUI
+    [SerializeField]
+    UpgradesPanelHandler upgradesPanel;
+    [SerializeField]
+    GameObject gameMenu;
+
     void Start()
     {
         Camera cam = GetComponent<Camera>();
@@ -45,7 +51,7 @@ public class SneakCamera : MonoBehaviour
         float xMouseMove = Input.GetAxis("Mouse X") * mouseSenseControlCamera;
         float yMouseMove = Input.GetAxis("Mouse Y") * mouseSenseControlCamera;
 
-        if (Input.GetButton("Fire1") || Cursor.visible)
+        if (Input.GetButton("Fire1") || upgradesPanel.gameObject.activeSelf)
         {
             xMouseMove = 0;
             yMouseMove = 0;
@@ -101,18 +107,9 @@ public class SneakCamera : MonoBehaviour
         if (newDistance < maxDistance && newDistance > minDistance)
             distance = newDistance;
 
-        if(Input.GetButtonDown("ToggleCursor"))
+        if (Input.GetButtonDown("UpgradesPanelOpen"))
         {
-            Cursor.visible = !Cursor.visible;
-            if (Cursor.visible)
-            {
-                Cursor.lockState = CursorLockMode.Confined;
-
-            }
-            else
-            {
-                Cursor.lockState = CursorLockMode.Locked;
-            }
+            upgradesPanel.Open();
         }
     }
 }

@@ -52,6 +52,7 @@ public class SneakControl : MonoBehaviour
     }
 
     //дл€ механики перемещени€ змеи в воздухе
+    public bool canStanding;
     [SerializeField]
     GameObject headRotationSphere;
     Vector3 targetHeadPosition; //позици€ в пространнстве к которому голова змеи стремитс€
@@ -75,6 +76,8 @@ public class SneakControl : MonoBehaviour
     float mouseSenseControlSpacing;
 
     //дл€ механики взбирани€ на дерево
+    public bool canClimbing;
+    SneakHead headCollisions;
     bool headFixed;
     FixedJoint headJoint;
     Collider lastHeadCollision;
@@ -163,7 +166,8 @@ public class SneakControl : MonoBehaviour
         if (sneakHeadSpacing && !bodySupport.JointIsSet)
             bodySupport.SetJoint();
 
-        sneakHeadSpacing = Input.GetButton("Fire2");
+        if(canStanding)
+            sneakHeadSpacing = Input.GetButton("Fire2");
 
         if(sneakHeadSpacing)
         {
@@ -192,7 +196,8 @@ public class SneakControl : MonoBehaviour
             headRotationSphere.transform.rotation = rotationSphere.transform.rotation;
         }
 
-        if(Input.GetButtonDown("FixSneakHead"))
+        lastHeadCollision = headCollisions.lastHeadCollision;
+        if(Input.GetButtonDown("FixSneakHead") && canClimbing)
         {
             headFixed = !headFixed;
         }
@@ -290,28 +295,11 @@ public class SneakControl : MonoBehaviour
         }
     }
 
-    private void OnCollisionEnter(Collision collision)
-    {
-        if (collision.collider.tag == "Enviroment")
-            lastHeadCollision = collision.collider;
-    }
-
-    private void OnCollisionStay(Collision collision)
-    {
-        if (collision.collider.tag == "Enviroment")
-            lastHeadCollision = collision.collider;
-    }
-
-    private void OnCollisionExit(Collision collision)
-    {
-        lastHeadCollision = null;
-    }
-
     public void SetHeadJoint()
     {
         if (lastHeadCollision != null)
         {
-            headJoint = gameObject.AddComponent<FixedJoint>();
+            headJoint = sneakHead.gameObject.AddComponent<FixedJoint>();
             headJoint.enableCollision = true;
         }
     }
@@ -391,6 +379,7 @@ public class SneakControl : MonoBehaviour
         head.transform.position = transform.position;
         head.transform.parent = transform;
         sneakHead = head.GetComponent<Rigidbody>();
+        headCollisions = head.GetComponent<SneakHead>();
 
         //создание тела
         for (int i = 0; i < sneakSize; i++)
@@ -471,5 +460,6 @@ public class SneakControl : MonoBehaviour
             Destroy(sneakBody[i].gameObject);
         }
         sneakBody.Clear();
+        Destroy(skinMesh.gameObject);
     }
 }

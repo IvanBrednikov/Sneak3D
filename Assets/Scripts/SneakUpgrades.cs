@@ -5,6 +5,8 @@ using UnityEngine;
 public class SneakUpgrades : MonoBehaviour
 {
     public int currentLengthLevel = 0;
+    public string skin;
+
     SneakControl sneak;
 
     public GameObject headPrefab1;
@@ -58,10 +60,22 @@ public class SneakUpgrades : MonoBehaviour
         }
     }
 
-    //вызывает регенерацию змейки и принятие изменений
+    //вызывает регенерацию змейки
     public void ReGenerateSneak()
     {
         sneak.DestroySneak();
         sneak.GenerateSneak();
+    }
+
+    public void UpgradeSneak(int lengthLevel, bool swimming, bool standing, bool climbing, string skin)
+    {
+        bool regenerateNeed = lengthLevel != currentLengthLevel;
+        currentLengthLevel = lengthLevel;
+        sneak.canClimbing = climbing;
+        sneak.canStanding = standing;
+        this.skin = skin;
+
+        if (regenerateNeed)
+            ReGenerateSneak();
     }
 }
