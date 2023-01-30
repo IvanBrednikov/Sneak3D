@@ -30,7 +30,7 @@ public class SneakUpgrades : MonoBehaviour
 
     public LengthLevel[] lengthLevels = 
     { 
-        new LengthLevel(0, 1, 20, 20, 10, 0.05f, 0.02f),
+        new LengthLevel(0, 1.5f, 25, 20, 10, 0.05f, 0.02f),
         new LengthLevel(1, 2, 20, 20, 20, 0.05f, 0.02f),
         new LengthLevel(2, 2, 20, 20, 30, 0.10f, 0.04f),
         new LengthLevel(3, 4, 30, 30, 40, 0.15f, 0.06f)
