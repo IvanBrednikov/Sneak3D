@@ -116,6 +116,11 @@ public class UpgradesPanelHandler : MonoBehaviour
     void Update()
     {
         pointsLabel.text = (currentPoints - pointsSpent).ToString();
+
+        if(Input.GetButtonDown("UpgradesPanelOpen"))
+        {
+            ClosePanel();
+        }
     }
 
     public void ConfirmChanges()
@@ -291,5 +296,10 @@ public class UpgradesPanelHandler : MonoBehaviour
             skin4Button.UpgradeSelected = false;
         if (skin5Button.UpgradeApplied && lastSkinSelected != "skin5")
             skin5Button.UpgradeSelected = false;
+    }
+
+    public void FoodAdd(int value)
+    {
+        currentPoints += value;
     }
 }
