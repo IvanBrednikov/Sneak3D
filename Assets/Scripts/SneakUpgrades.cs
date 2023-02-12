@@ -23,6 +23,9 @@ public class SneakUpgrades : MonoBehaviour
     public GameObject sneakSkin2;
     public GameObject sneakSkin3;
 
+    [SerializeField]
+    GameObject swimmingObstacle;
+
     private void Start()
     {
         sneak = GetComponent<SneakControl>();
@@ -30,10 +33,10 @@ public class SneakUpgrades : MonoBehaviour
 
     public LengthLevel[] lengthLevels = 
     { 
-        new LengthLevel(0, 1.5f, 25, 20, 10, 0.05f, 0.02f),
-        new LengthLevel(1, 2, 20, 20, 20, 0.05f, 0.02f),
-        new LengthLevel(2, 2, 20, 20, 30, 0.10f, 0.04f),
-        new LengthLevel(3, 4, 30, 30, 40, 0.15f, 0.06f)
+        new LengthLevel(0, 2f, 25, 20, 10, 0.05f, 0.02f),
+        new LengthLevel(1, 3, 20, 30, 20, 0.05f, 0.02f),
+        new LengthLevel(2, 4, 25, 30, 30, 0.10f, 0.04f),
+        new LengthLevel(3, 4, 30, 30, 10, 0.15f, 0.06f)
     };
 
     public struct LengthLevel
@@ -74,6 +77,9 @@ public class SneakUpgrades : MonoBehaviour
         sneak.canClimbing = climbing;
         sneak.canStanding = standing;
         this.skin = skin;
+
+        if (swimmingObstacle != null)
+            swimmingObstacle.SetActive(!swimming);
 
         if (regenerateNeed)
             ReGenerateSneak();

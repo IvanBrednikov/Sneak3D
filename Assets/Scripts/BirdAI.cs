@@ -5,7 +5,7 @@ using UnityEngine.AI;
 
 public class BirdAI : MonoBehaviour
 {
-    public Transform destination;
+    Vector3 destination;
     NavMeshAgent agent;
     [SerializeField]
     Animator animator;
@@ -63,7 +63,7 @@ public class BirdAI : MonoBehaviour
                 case BirdMovingState.IsWalking:
                     try
                     {
-                        destination.position = FindTakeOffPosition();
+                        destination = FindTakeOffPosition();
                         birdMovingState = BirdMovingState.IsTakingOff;
                         movingStateTimer = transitionTime;
                         agent.enabled = false;
@@ -72,7 +72,7 @@ public class BirdAI : MonoBehaviour
                     }
                     catch (NavMeshPointNotFound exception)
                     {
-                        destination.position = FindWalkingPosition();
+                        destination = FindWalkingPosition();
                         movingStateTimer = walkTime;
                     }
                     break;
@@ -80,12 +80,12 @@ public class BirdAI : MonoBehaviour
                     birdMovingState = BirdMovingState.IsFlying;
                     movingStateTimer = flyTime;
                     agent.enabled = true;
-                    destination.position = FindFlightPosition();
+                    destination = FindFlightPosition();
                     break;
                 case BirdMovingState.IsFlying:
                     try
                     {
-                        destination.position = FindLandPosition();
+                        destination = FindLandPosition();
                         birdMovingState = BirdMovingState.IsLanding;
                         movingStateTimer = transitionTime;
                         agent.enabled = false;
@@ -93,7 +93,7 @@ public class BirdAI : MonoBehaviour
                     }
                     catch (NavMeshPointNotFound exception)
                     {
-                        destination.position = FindFlightPosition();
+                        destination = FindFlightPosition();
                         movingStateTimer = flyTime;
                     }
                     break;
@@ -101,7 +101,7 @@ public class BirdAI : MonoBehaviour
                     birdMovingState = BirdMovingState.IsWalking;
                     movingStateTimer = walkTime;
                     agent.enabled = true;
-                    destination.position = FindWalkingPosition();
+                    destination = FindWalkingPosition();
                     break;
             }
         }
@@ -110,29 +110,29 @@ public class BirdAI : MonoBehaviour
         if (walkDelayTimer <= 0 && 
             birdMovingState == BirdMovingState.IsWalking)
         {
-            destination.position = FindWalkingPosition();
+            destination = FindWalkingPosition();
             walkDelayTimer = Random.Range(minTimeBetweenWalk, maxTimeBetweenWalk);
         }
 
         //если сейчас полёт и растояние до точки назначения уже близко то изменить точку назначения
         if (birdMovingState == BirdMovingState.IsFlying &&
-           Vector3.Distance(transform.position, destination.position)
+           Vector3.Distance(transform.position, destination)
            <= newDestinationFlightDistance)
         {
             movingLastPosition = transform.position;
-            destination.position = FindFlightPosition();
+            destination = FindFlightPosition();
         }
 
         //обработка полёта и ходьбы
         if (birdMovingState == BirdMovingState.IsWalking || birdMovingState == BirdMovingState.IsFlying)
-            agent.destination = destination.position;
+            agent.destination = destination;
 
 
         //обработка взлёта и приземления
         if (birdMovingState == BirdMovingState.IsTakingOff ||
             birdMovingState == BirdMovingState.IsLanding)
         {
-            Vector3 speedVector = (destination.position - transitionStartPosition) / transitionTime;
+            Vector3 speedVector = (destination - transitionStartPosition) / transitionTime;
             Vector3 translation = speedVector * Time.deltaTime;
             transform.position += translation;
         }
@@ -321,7 +321,7 @@ public class BirdAI : MonoBehaviour
     {
         try
         {
-            destination.position = FindTakeOffPosition();
+            destination = FindTakeOffPosition();
             birdMovingState = BirdMovingState.IsTakingOff;
             movingStateTimer = transitionTime;
             agent.enabled = false;
