@@ -134,10 +134,10 @@ public class UpgradesPanelHandler : MonoBehaviour
 
     public void Open()
     {
-        Cursor.visible = true;
-        Cursor.lockState = CursorLockMode.Confined;
-        ButtonsActivating();
         gameObject.SetActive(true);
+        Cursor.visible = true;
+        Cursor.lockState = CursorLockMode.None;
+        ButtonsActivating();
     }
 
     public void ClosePanel()
