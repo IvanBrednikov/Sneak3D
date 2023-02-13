@@ -36,7 +36,7 @@ public class SneakUpgrades : MonoBehaviour
         new LengthLevel(0, 2f, 25, 20, 10, 0.05f, 0.02f),
         new LengthLevel(1, 3, 20, 30, 20, 0.05f, 0.02f),
         new LengthLevel(2, 4, 25, 30, 30, 0.10f, 0.04f),
-        new LengthLevel(3, 4, 30, 30, 10, 0.15f, 0.06f)
+        new LengthLevel(3, 4, 30, 30, 40, 0.15f, 0.06f)
     };
 
     public struct LengthLevel
