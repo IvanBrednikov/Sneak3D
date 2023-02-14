@@ -13,6 +13,13 @@ public class FishAI : MonoBehaviour
     [SerializeField]
     GameObject mesh;
 
+    [SerializeField]
+    AudioSource fishIntoWaterSound;
+    [SerializeField]
+    AudioSource fishOutOfWaterSound;
+    bool fishIsInWater = true;
+    
+
     void Start()
     {
         rb = GetComponent<Rigidbody>();
@@ -33,5 +40,21 @@ public class FishAI : MonoBehaviour
     {
         Vector3 viewPoint = transform.position + rb.velocity;
         transform.LookAt(viewPoint, Vector3.up);
+    }
+
+    private void OnTriggerEnter(Collider other)
+    {
+        if (other.tag == "WaterSoundLevel")
+        {
+            if (fishIsInWater)
+            {
+                fishIsInWater = false;
+                fishOutOfWaterSound.Play();
+            }
+            else
+            {
+                fishIntoWaterSound.Play();
+            }
+        }
     }
 }

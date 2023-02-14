@@ -9,6 +9,8 @@ public class BirdAI : MonoBehaviour
     NavMeshAgent agent;
     [SerializeField]
     Animator animator;
+    [SerializeField]
+    AudioSource audio;
 
     [SerializeField]
     float flyTime = 10f;
@@ -68,6 +70,7 @@ public class BirdAI : MonoBehaviour
                         movingStateTimer = transitionTime;
                         agent.enabled = false;
                         transitionStartPosition = transform.position;
+                        audio.Play();
 
                     }
                     catch (NavMeshPointNotFound exception)
@@ -102,6 +105,7 @@ public class BirdAI : MonoBehaviour
                     movingStateTimer = walkTime;
                     agent.enabled = true;
                     destination = FindWalkingPosition();
+                    audio.Stop();
                     break;
             }
         }
@@ -326,6 +330,7 @@ public class BirdAI : MonoBehaviour
             movingStateTimer = transitionTime;
             agent.enabled = false;
             transitionStartPosition = transform.position;
+            audio.Play();
         }
         catch (NavMeshPointNotFound exception)
         {

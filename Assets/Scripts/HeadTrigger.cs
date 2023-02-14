@@ -5,9 +5,27 @@ using UnityEngine;
 public class HeadTrigger : MonoBehaviour
 {
     UpgradesPanelHandler upgradesPanel;
+    AudioSource eatSound;
+    [SerializeField]
+    AudioSource idleSound;
+
+    float delayTimer;
+
     private void Start()
     {
         upgradesPanel = FindObjectOfType<UpgradesPanelHandler>(true);
+        eatSound = GetComponent<AudioSource>();
+        delayTimer = Random.Range(5, 20);
+    }
+
+    private void Update()
+    {
+        delayTimer -= Time.deltaTime;
+        if(delayTimer <= 0)
+        {
+            delayTimer = Random.Range(5, 20);
+            idleSound.Play();
+        }
     }
 
     private void OnTriggerEnter(Collider other)
@@ -16,6 +34,7 @@ public class HeadTrigger : MonoBehaviour
         if(food != null)
         {
             food.FoodConsume(upgradesPanel);
+            eatSound.Play();
         }
     }
 }
