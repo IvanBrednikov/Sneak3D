@@ -462,4 +462,12 @@ public class SneakControl : MonoBehaviour
         sneakBody.Clear();
         Destroy(skinMesh.gameObject);
     }
+
+    public void SetMaterial(Material material)
+    {
+        if(material != null)
+        {
+            skinMesh.material = material;
+        }
+    }
 }

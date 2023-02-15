@@ -26,6 +26,18 @@ public class SneakUpgrades : MonoBehaviour
     [SerializeField]
     GameObject swimmingObstacle;
 
+    [SerializeField]
+    Material defaultSkin;
+    [SerializeField]
+    Material[] length0Skins;
+    [SerializeField]
+    Material[] length1Skins;
+    [SerializeField]
+    Material[] length2Skins;
+    [SerializeField]
+    Material[] length3Skins;
+
+
     private void Start()
     {
         sneak = GetComponent<SneakControl>();
@@ -83,5 +95,56 @@ public class SneakUpgrades : MonoBehaviour
 
         if (regenerateNeed)
             ReGenerateSneak();
+
+        Material mat = GetMaterialSkin(skin);
+        sneak.SetMaterial(mat);
+    }
+
+    Material GetMaterialSkin(string skin)
+    {
+        Material result = defaultSkin;
+
+        if(skin != "defaultSkin" && skin != "skin1")
+        {
+            int skinNumber = -1;
+
+            switch (skin)
+            {
+                case "skin2":
+                    skinNumber = 0;
+                    break;
+                case "skin3":
+                    skinNumber = 1;
+                    break;
+                case "skin4":
+                    skinNumber = 2;
+                    break;
+                case "skin5":
+                    skinNumber = 3;
+                    break;
+            }
+
+
+            if (skinNumber >= 0 && skinNumber < 4)
+            {
+                switch (currentLengthLevel)
+                {
+                    case 0:
+                        result = length0Skins[skinNumber];
+                        break;
+                    case 1:
+                        result = length1Skins[skinNumber];
+                        break;
+                    case 2:
+                        result = length2Skins[skinNumber];
+                        break;
+                    case 3:
+                        result = length3Skins[skinNumber];
+                        break;
+                }
+            }
+        }
+
+        return result;
     }
 }
