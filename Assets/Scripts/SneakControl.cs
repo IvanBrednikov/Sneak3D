@@ -5,6 +5,8 @@ using UnityEngine;
 public class SneakControl : MonoBehaviour
 {
     [SerializeField]
+    UserInterface sneakInterface;
+    [SerializeField]
     Rigidbody sneakHead;
     [SerializeField]
     Rigidbody sneakTail;
@@ -29,6 +31,7 @@ public class SneakControl : MonoBehaviour
 
     //для генерации змейки
     SneakUpgrades upgrades;
+    Vector3 lastPosBeforeDestroy;
     [SerializeField]
     bool isGenerated;
     [SerializeField]
@@ -92,6 +95,7 @@ public class SneakControl : MonoBehaviour
     
     void Start()
     {
+        lastPosBeforeDestroy = transform.position;
         upgrades = GetComponent<SneakUpgrades>();
         skinMesh = GetComponentInChildren<SkinnedMeshRenderer>();
 
@@ -123,103 +127,106 @@ public class SneakControl : MonoBehaviour
 
     void Update()
     {
-        isMoving = Input.GetButton("Fire1");
-        if (isMoving)
+        if(!sneakInterface.UiActive)
         {
-            float yMouseMove = Input.GetAxis("Mouse Y");
-            if (yMouseMove > 0)
+            isMoving = Input.GetButton("Fire1");
+            if (isMoving)
             {
-                HeadForceControl = yMouseMove;
-                BodyForceControl = 1f;
+                float yMouseMove = Input.GetAxis("Mouse Y");
+                if (yMouseMove > 0)
+                {
+                    HeadForceControl = yMouseMove;
+                    BodyForceControl = 1f;
+                }
+                else
+                if (yMouseMove < 0)
+                {
+                    BodyForceControl = Mathf.Abs(yMouseMove);
+                    HeadForceControl = 0f;
+                }
+                else
+                if (yMouseMove == 0)
+                {
+                    HeadForceControl = 0f;
+                    BodyForceControl = 0f;
+                }
+
+                additionalMovingAngle = 90 * Input.GetAxis("Horizontal");
+            }
+
+            headRotationSphere.transform.position = bodySupportObject.transform.position;
+            //sneakHead trigger
+            BodySupport bodySupport = bodySupportObject.GetComponent<BodySupport>();
+            if (sneakHeadSpacing != Input.GetButton("Fire2"))
+            {
+                if (sneakHeadSpacing)
+                {
+                    bodySupport.DestroyJoint();
+                    targetPositionDebug.SetActive(false);
+                }
+                else
+                {
+                    targetPositionDebug.SetActive(true);
+                }
+            }
+            if (sneakHeadSpacing && !bodySupport.JointIsSet)
+                bodySupport.SetJoint();
+
+            if (canStanding)
+                sneakHeadSpacing = Input.GetButton("Fire2");
+
+            if (sneakHeadSpacing)
+            {
+                float yMouseMove = Input.GetAxis("Mouse Y") * mouseSenseControlSpacing;
+                float xMouseMove = Input.GetAxis("Mouse X") * mouseSenseControlSpacing;
+                Vector3 rotation = headRotationSphere.transform.rotation.eulerAngles + new Vector3(yMouseMove, xMouseMove, 0f);
+                //ограничения на вращение
+                float virtualYmov = headRotationSphere.transform.rotation.eulerAngles.x + yMouseMove;
+                if (virtualYmov > 80 && virtualYmov < 180)
+                {
+                    rotation = new Vector3(80, xMouseMove + headRotationSphere.transform.rotation.eulerAngles.y, 0);
+                }
+
+                if (virtualYmov < 280 && virtualYmov >= 180)
+                {
+                    rotation = new Vector3(280, xMouseMove + headRotationSphere.transform.rotation.eulerAngles.y, 0);
+                }
+
+                rotation.z = 0f;
+                headRotationSphere.transform.rotation = Quaternion.Euler(rotation);
             }
             else
-            if (yMouseMove < 0)
             {
-                BodyForceControl = Mathf.Abs(yMouseMove);
-                HeadForceControl = 0f;
-            }
-            else
-            if (yMouseMove == 0)
-            {
-                HeadForceControl = 0f;
-                BodyForceControl = 0f;
+                Vector3 rotation = bodySupportObject.transform.rotation.eulerAngles;
+                rotation.z = 0f;
+                headRotationSphere.transform.rotation = rotationSphere.transform.rotation;
             }
 
-            additionalMovingAngle = 90 * Input.GetAxis("Horizontal");
-        }
-
-        headRotationSphere.transform.position = bodySupportObject.transform.position;
-        //sneakHead trigger
-        BodySupport bodySupport = bodySupportObject.GetComponent<BodySupport>();
-        if (sneakHeadSpacing != Input.GetButton("Fire2"))
-        {
-            if(sneakHeadSpacing)
+            lastHeadCollision = headCollisions.lastHeadCollision;
+            if (Input.GetButtonDown("FixSneakHead") && canClimbing)
             {
-                bodySupport.DestroyJoint();
-                targetPositionDebug.SetActive(false);
+                headFixed = !headFixed;
+            }
+
+            if (headFixed)
+            {
+                if (headJoint == null)
+                    SetHeadJoint();
             }
             else
             {
-                targetPositionDebug.SetActive(true);
+                DestroyHeadJoint();
             }
-        }
-        if (sneakHeadSpacing && !bodySupport.JointIsSet)
-            bodySupport.SetJoint();
 
-        if(canStanding)
-            sneakHeadSpacing = Input.GetButton("Fire2");
-
-        if(sneakHeadSpacing)
-        {
-            float yMouseMove = Input.GetAxis("Mouse Y") * mouseSenseControlSpacing;
-            float xMouseMove = Input.GetAxis("Mouse X") * mouseSenseControlSpacing;
-            Vector3 rotation = headRotationSphere.transform.rotation.eulerAngles + new Vector3(yMouseMove, xMouseMove, 0f);
-            //ограничения на вращение
-            float virtualYmov = headRotationSphere.transform.rotation.eulerAngles.x + yMouseMove;
-            if (virtualYmov > 80 && virtualYmov < 180)
+            if (Input.GetButtonDown("NextSupportBoddy"))
             {
-                rotation = new Vector3(80, xMouseMove + headRotationSphere.transform.rotation.eulerAngles.y, 0);
+                SetNewSupportBody(bodySupportPoint + 1);
             }
 
-            if (virtualYmov < 280 && virtualYmov >= 180)
+            if (Input.GetButtonDown("PreviousSupportBoddy"))
             {
-                rotation = new Vector3(280, xMouseMove + headRotationSphere.transform.rotation.eulerAngles.y, 0);
+                SetNewSupportBody(bodySupportPoint - 1);
             }
-
-            rotation.z = 0f;
-            headRotationSphere.transform.rotation = Quaternion.Euler(rotation);
-        }
-        else
-        {
-            Vector3 rotation = bodySupportObject.transform.rotation.eulerAngles;
-            rotation.z = 0f;
-            headRotationSphere.transform.rotation = rotationSphere.transform.rotation;
-        }
-
-        lastHeadCollision = headCollisions.lastHeadCollision;
-        if(Input.GetButtonDown("FixSneakHead") && canClimbing)
-        {
-            headFixed = !headFixed;
-        }
-
-        if (headFixed)
-        {
-            if(headJoint == null)
-                SetHeadJoint();
-        }
-        else
-        {
-            DestroyHeadJoint();
-        }
-
-        if (Input.GetButtonDown("NextSupportBoddy"))
-        {
-            SetNewSupportBody(bodySupportPoint + 1);
-        }
-
-        if(Input.GetButtonDown("PreviousSupportBoddy"))
-        {
-            SetNewSupportBody(bodySupportPoint - 1);
         }
     }
 
@@ -340,6 +347,7 @@ public class SneakControl : MonoBehaviour
 
     public void GenerateSneak()
     {
+        transform.position = lastPosBeforeDestroy;
         List<Rigidbody> list = new List<Rigidbody>();
 
         //иниициализация параметров змейки
@@ -453,6 +461,7 @@ public class SneakControl : MonoBehaviour
 
     public void DestroySneak()
     {
+        lastPosBeforeDestroy = sneakHead.transform.position + Vector3.up * 2f;
         Destroy(sneakHead.gameObject);
         Destroy(sneakTail.gameObject);
         for(int i = 0; i < sneakSize; i++)

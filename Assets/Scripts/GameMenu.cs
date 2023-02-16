@@ -16,9 +16,23 @@ public class GameMenu : MonoBehaviour
     [SerializeField]
     AudioMixer audioMixer;
 
+    //для сохранения настроек
+    [SerializeField]
+    Slider masterVolumeSlider;
+    [SerializeField]
+    Slider envVolume;
+    [SerializeField]
+    Slider effectsVolume;
+    [SerializeField]
+    Slider fieldOfView;
+    [SerializeField]
+    Dropdown graphic;
+
     private void Start()
     {
         sneakCam = sneakCamera.GetComponent<SneakCamera>();
+        LoadSettings();
+        gameObject.SetActive(false);
     }
 
     private void Update()
@@ -60,6 +74,7 @@ public class GameMenu : MonoBehaviour
     public void CloseOptions()
     {
         SetMouseSensevity(mouseSenseField.text);
+        SaveSettings();
         options.SetActive(false);
         gameObject.SetActive(true);
     }
@@ -91,9 +106,7 @@ public class GameMenu : MonoBehaviour
 
     public void SetGraphicQuality(int value)
     {
-        Debug.Log(QualitySettings.GetQualityLevel());
         QualitySettings.SetQualityLevel(value, true);
-        Debug.Log(QualitySettings.GetQualityLevel());
     }
 
     public void SetMasterVolume(float value)
@@ -109,5 +122,51 @@ public class GameMenu : MonoBehaviour
     public void SetEffectsVolume(float value)
     {
         audioMixer.SetFloat("EffectsVolume", value);
+    }
+
+    void SaveSettings()
+    {
+        float mouseSense = 1f;
+        float.TryParse(mouseSenseField.text, out mouseSense);
+        int masterVolume = (int)masterVolumeSlider.value;
+        int enviromentVolume = (int)envVolume.value;
+        int effectVolume = (int)effectsVolume.value;
+        int fov = (int)fieldOfView.value;
+        int graph = graphic.value;
+
+        PlayerPrefs.SetFloat("sens", mouseSense);
+        PlayerPrefs.SetInt("masterV", masterVolume);
+        PlayerPrefs.SetInt("envVol", enviromentVolume);
+        PlayerPrefs.SetInt("effVol", effectVolume);
+        PlayerPrefs.SetInt("fov", fov);
+        PlayerPrefs.SetInt("graphic", graph);
+    }
+
+    public void LoadSettings()
+    {
+        if(PlayerPrefs.HasKey("sens"))
+        {
+            float mouseSense = PlayerPrefs.GetFloat("sens");
+            int masterVolume = PlayerPrefs.GetInt("masterV");
+            int enviromentVolume = PlayerPrefs.GetInt("envVol");
+            int effectVolume = PlayerPrefs.GetInt("effVol");
+            int fov = PlayerPrefs.GetInt("fov");
+            int graph = PlayerPrefs.GetInt("graphic");
+
+            if (mouseSense == 0)
+                mouseSense = 1f;
+
+            sneakCam.SetMouseSensevity(mouseSense);
+            mouseSenseField.text = mouseSense.ToString();
+            SetMasterVolume(masterVolume);
+            masterVolumeSlider.value = masterVolume;
+            SetEnviromentVolume(enviromentVolume);
+            envVolume.value = enviromentVolume;
+            SetEffectsVolume(effectVolume);
+            effectsVolume.value = effectVolume;
+            SetFieldOfView(fov);
+            fieldOfView.value = fov;
+            graphic.value = graph;
+        }
     }
 }

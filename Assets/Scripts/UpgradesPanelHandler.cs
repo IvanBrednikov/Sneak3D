@@ -102,7 +102,6 @@ public class UpgradesPanelHandler : MonoBehaviour
 
     private void Length2Button_OnUpgradeDeselect(object sender, System.EventArgs e)
     {
-        standingButton.Deselect();
         climbingButton.Deselect();
         length3Button.Deselect();
     }
@@ -111,6 +110,7 @@ public class UpgradesPanelHandler : MonoBehaviour
     {
         length2Button.Deselect();
         swimmingButton.Deselect();
+        standingButton.Deselect();
     }
 
     void Update()

@@ -4,8 +4,7 @@ using UnityEngine;
 
 public class UserInterface : MonoBehaviour
 {
-    [SerializeField]
-    GameMenu gameMenu;
+    public GameMenu gameMenu;
     [SerializeField]
     UpgradesPanelHandler upgradesPanel;
     [SerializeField]
