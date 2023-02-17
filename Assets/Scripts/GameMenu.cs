@@ -7,6 +7,8 @@ using UnityEngine.Audio;
 public class GameMenu : MonoBehaviour
 {
     [SerializeField]
+    Button resumeButton;
+    [SerializeField]
     GameObject options;
     [SerializeField]
     Camera sneakCamera;
@@ -27,10 +29,15 @@ public class GameMenu : MonoBehaviour
     Slider fieldOfView;
     [SerializeField]
     Dropdown graphic;
+    [SerializeField]
+    Toggle fullScreenToggle;
+    [SerializeField]
+    Dropdown resolutionDrop;
 
     private void Start()
     {
         sneakCam = sneakCamera.GetComponent<SneakCamera>();
+        SetResolutoinsDropDownItems();
         LoadSettings();
         gameObject.SetActive(false);
     }
@@ -49,6 +56,7 @@ public class GameMenu : MonoBehaviour
         Time.timeScale = 0f;
         Cursor.visible = true;
         Cursor.lockState = CursorLockMode.None;
+        resumeButton.Select();
     }
 
     public void Close()
@@ -68,6 +76,7 @@ public class GameMenu : MonoBehaviour
     public void Options()
     {
         options.SetActive(true);
+        masterVolumeSlider.Select();
         gameObject.SetActive(false);
     }
 
@@ -76,6 +85,7 @@ public class GameMenu : MonoBehaviour
         SetMouseSensevity(mouseSenseField.text);
         SaveSettings();
         options.SetActive(false);
+        resumeButton.Select();
         gameObject.SetActive(true);
     }
 
@@ -133,6 +143,8 @@ public class GameMenu : MonoBehaviour
         int effectVolume = (int)effectsVolume.value;
         int fov = (int)fieldOfView.value;
         int graph = graphic.value;
+        int fullRes = (fullScreenToggle.isOn) ? 1 : 0;
+        int resItem = resolutionDrop.value;
 
         PlayerPrefs.SetFloat("sens", mouseSense);
         PlayerPrefs.SetInt("masterV", masterVolume);
@@ -140,6 +152,8 @@ public class GameMenu : MonoBehaviour
         PlayerPrefs.SetInt("effVol", effectVolume);
         PlayerPrefs.SetInt("fov", fov);
         PlayerPrefs.SetInt("graphic", graph);
+        PlayerPrefs.SetInt("fullRes", fullRes);
+        PlayerPrefs.SetInt("resItem", resItem);
     }
 
     public void LoadSettings()
@@ -152,9 +166,13 @@ public class GameMenu : MonoBehaviour
             int effectVolume = PlayerPrefs.GetInt("effVol");
             int fov = PlayerPrefs.GetInt("fov");
             int graph = PlayerPrefs.GetInt("graphic");
+            bool fullRes = PlayerPrefs.GetInt("fullRes") == 1;
+            int resItem = PlayerPrefs.GetInt("resItem");
 
             if (mouseSense == 0)
                 mouseSense = 1f;
+            if (resItem > resolutionDrop.options.Count - 1)
+                resItem = resolutionDrop.options.Count - 1;
 
             sneakCam.SetMouseSensevity(mouseSense);
             mouseSenseField.text = mouseSense.ToString();
@@ -167,6 +185,35 @@ public class GameMenu : MonoBehaviour
             SetFieldOfView(fov);
             fieldOfView.value = fov;
             graphic.value = graph;
+            fullScreenToggle.isOn = fullRes;
+            SetScreenResolution(resItem);
+            resolutionDrop.value = resItem;
         }
+    }
+
+    public void SetScreenResolution(int item)
+    {
+        Resolution[] resolutions = Screen.resolutions;
+        Screen.SetResolution(resolutions[item].width, resolutions[item].height, fullScreenToggle.isOn, resolutions[item].refreshRate);
+    }
+
+    void SetResolutoinsDropDownItems()
+    {
+        Resolution[] resolutions = Screen.resolutions;
+        List<Dropdown.OptionData> options = new List<Dropdown.OptionData>();
+
+        for (int i = 0; i < resolutions.Length; i++)
+        {
+            string str = $"{resolutions[i].width}x{resolutions[i].height} {resolutions[i].refreshRate}hz";
+            Dropdown.OptionData data = new Dropdown.OptionData(str);
+            options.Add(data);
+        }
+
+        resolutionDrop.options = options;
+    }
+
+    public void SetFullScreen(bool value)
+    {
+        Screen.fullScreen = value;
     }
 }

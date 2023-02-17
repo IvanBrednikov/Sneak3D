@@ -132,7 +132,7 @@ public class SneakControl : MonoBehaviour
             isMoving = Input.GetButton("Fire1");
             if (isMoving)
             {
-                float yMouseMove = Input.GetAxis("Mouse Y");
+                float yMouseMove = Input.GetAxis("Mouse Y joyInverted"); //для геймпада и мыши
                 if (yMouseMove > 0)
                 {
                     HeadForceControl = yMouseMove;
@@ -178,7 +178,7 @@ public class SneakControl : MonoBehaviour
             if (sneakHeadSpacing)
             {
                 float yMouseMove = Input.GetAxis("Mouse Y") * mouseSenseControlSpacing;
-                float xMouseMove = Input.GetAxis("Mouse X") * mouseSenseControlSpacing;
+                float xMouseMove = Input.GetAxis("Mouse X joyInverted") * mouseSenseControlSpacing;
                 Vector3 rotation = headRotationSphere.transform.rotation.eulerAngles + new Vector3(yMouseMove, xMouseMove, 0f);
                 //ограничения на вращение
                 float virtualYmov = headRotationSphere.transform.rotation.eulerAngles.x + yMouseMove;

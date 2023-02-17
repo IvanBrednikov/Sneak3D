@@ -54,7 +54,11 @@ public class SneakCamera : MonoBehaviour
         }
 
         if (Input.GetButton("Fire2"))
+        {
             yMouseMove = 0;
+            xMouseMove = Input.GetAxis("Mouse X joyInverted") * mouseSenseControlCamera; //для геймпада
+        }
+            
 
         Vector3 rotation = rotationSphere.transform.rotation.eulerAngles + new Vector3(-yMouseMove, xMouseMove, 0);
 

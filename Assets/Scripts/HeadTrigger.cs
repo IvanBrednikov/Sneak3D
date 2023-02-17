@@ -15,7 +15,7 @@ public class HeadTrigger : MonoBehaviour
     {
         upgradesPanel = FindObjectOfType<UpgradesPanelHandler>(true);
         eatSound = GetComponent<AudioSource>();
-        delayTimer = Random.Range(5, 20);
+        delayTimer = Random.Range(15, 30);
     }
 
     private void Update()

@@ -12,6 +12,8 @@ public class UpgradesPanelHandler : MonoBehaviour
     SneakUpgrades sneakUpgrades;
     [SerializeField]
     Text pointsLabel;
+    [SerializeField]
+    Button firstFocusButton;
 
     [SerializeField]
     UpgradeButton length1Button;
@@ -136,6 +138,7 @@ public class UpgradesPanelHandler : MonoBehaviour
     {
         gameObject.SetActive(true);
         Cursor.visible = true;
+        firstFocusButton.Select();
         Cursor.lockState = CursorLockMode.None;
         ButtonsActivating();
     }

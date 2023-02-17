@@ -81,6 +81,26 @@ public class UpgradeButton : Button
         }
     }
 
+    public override void OnSubmit(BaseEventData eventData)
+    {
+        if (!upgradeApplied || skinButton)
+        {
+            if (!upgradeSelected && IsInteractable())
+            {
+                upgradeSelected = true;
+                image.sprite = selectedSprite;
+                OnUpgradeSelect(this, null);
+            }
+            else
+            {
+                upgradeSelected = false;
+                image.sprite = unSelectedSprite;
+                OnUpgradeDeselect(this, null);
+            }
+        }
+        OnAnyClick(this, null);
+    }
+
     public event System.EventHandler OnUpgradeSelect;
 
     public event System.EventHandler OnUpgradeDeselect;
