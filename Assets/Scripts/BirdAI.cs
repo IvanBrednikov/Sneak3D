@@ -354,7 +354,7 @@ public class NavMeshPointNotFound : System.Exception
 {
     public NavMeshPointNotFound(string message) : base(message)
     {
-        Debug.LogException(this);
+        //Debug.LogException(this);
     }
 }
 

@@ -11,6 +11,10 @@ public class GameMenu : MonoBehaviour
     [SerializeField]
     GameObject options;
     [SerializeField]
+    GameObject quitConfirm;
+    [SerializeField]
+    Button cancelQuit;
+    [SerializeField]
     Camera sneakCamera;
     SneakCamera sneakCam;
     [SerializeField]
@@ -38,6 +42,7 @@ public class GameMenu : MonoBehaviour
     {
         sneakCam = sneakCamera.GetComponent<SneakCamera>();
         SetResolutoinsDropDownItems();
+        SetScreenResolution(resolutionDrop.options.Count - 1);
         LoadSettings();
         gameObject.SetActive(false);
     }
@@ -57,6 +62,7 @@ public class GameMenu : MonoBehaviour
         Cursor.visible = true;
         Cursor.lockState = CursorLockMode.None;
         resumeButton.Select();
+        quitConfirm.SetActive(false);
     }
 
     public void Close()
@@ -90,6 +96,19 @@ public class GameMenu : MonoBehaviour
     }
 
     public void Quit()
+    {
+        quitConfirm.SetActive(true);
+        gameObject.SetActive(false);
+        cancelQuit.Select();
+    }
+
+    public void CancelQuit()
+    {
+        quitConfirm.SetActive(false);
+        Open();
+    }
+
+    public void QuitConfirm()
     {
         Application.Quit();
     }

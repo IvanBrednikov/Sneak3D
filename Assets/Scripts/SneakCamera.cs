@@ -47,18 +47,17 @@ public class SneakCamera : MonoBehaviour
         float xMouseMove = Input.GetAxis("Mouse X") * mouseSenseControlCamera;
         float yMouseMove = Input.GetAxis("Mouse Y") * mouseSenseControlCamera;
 
-        if (Input.GetButton("Fire1") || ui.UiActive)
-        {
-            xMouseMove = 0;
-            yMouseMove = 0;
-        }
-
         if (Input.GetButton("Fire2"))
         {
             yMouseMove = 0;
             xMouseMove = Input.GetAxis("Mouse X joyInverted") * mouseSenseControlCamera; //для геймпада
         }
-            
+
+        if (Input.GetButton("Fire1") || ui.UiActive)
+        {
+            xMouseMove = 0;
+            yMouseMove = 0;
+        }
 
         Vector3 rotation = rotationSphere.transform.rotation.eulerAngles + new Vector3(-yMouseMove, xMouseMove, 0);
 
@@ -89,14 +88,18 @@ public class SneakCamera : MonoBehaviour
             }
 
         hits = Physics.RaycastAll(rotationSphere.transform.position, rotationSphere.transform.TransformDirection(new Vector3(0f, 0f, -1)), distance + 1f);
+        float highestLevel = 0;
 
         for (int i = 0; i < hits.Length; i++)
         {
             if (hits[i].transform.name == "Terrain" || 
                 hits[i].transform.name == "WaterLevel")
             {
-                cuttedDistance = hits[i].distance - 1f;
-                break;
+                if(hits[i].point.y > highestLevel)
+                {
+                    cuttedDistance = hits[i].distance - 1f;
+                    highestLevel = hits[i].point.y;
+                }
             }
         }
         

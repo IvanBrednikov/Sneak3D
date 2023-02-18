@@ -9,6 +9,8 @@ public class UserInterface : MonoBehaviour
     UpgradesPanelHandler upgradesPanel;
     [SerializeField]
     GameObject options;
+    [SerializeField]
+    GameObject quitConfirm;
 
     void Update()
     {
@@ -34,7 +36,11 @@ public class UserInterface : MonoBehaviour
     {
         get
         {
-            return gameMenu.gameObject.activeSelf || upgradesPanel.gameObject.activeSelf || options.activeSelf;
+            return 
+                gameMenu.gameObject.activeSelf || 
+                upgradesPanel.gameObject.activeSelf || 
+                options.activeSelf || 
+                quitConfirm.activeSelf;
         }
     }
 }

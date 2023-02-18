@@ -30,8 +30,14 @@ public class SneakControl : MonoBehaviour
     GameObject rotationSphere;
 
     //для генерации змейки
+    [SerializeField]
+    Transform firstSpawnPoint;
+    [SerializeField]
+    Transform secondSpawnPoint;
+    [SerializeField]
+    Transform respawnLevel;
     SneakUpgrades upgrades;
-    Vector3 lastPosBeforeDestroy;
+    Vector3 spawnPoint;
     [SerializeField]
     bool isGenerated;
     [SerializeField]
@@ -95,7 +101,7 @@ public class SneakControl : MonoBehaviour
     
     void Start()
     {
-        lastPosBeforeDestroy = transform.position;
+        spawnPoint = transform.position;
         upgrades = GetComponent<SneakUpgrades>();
         skinMesh = GetComponentInChildren<SkinnedMeshRenderer>();
 
@@ -347,7 +353,7 @@ public class SneakControl : MonoBehaviour
 
     public void GenerateSneak()
     {
-        transform.position = lastPosBeforeDestroy;
+        transform.position = spawnPoint;
         List<Rigidbody> list = new List<Rigidbody>();
 
         //иниициализация параметров змейки
@@ -461,7 +467,7 @@ public class SneakControl : MonoBehaviour
 
     public void DestroySneak()
     {
-        lastPosBeforeDestroy = sneakHead.transform.position + Vector3.up * 2f;
+        spawnPoint = sneakHead.transform.position + Vector3.up * 2f;
         Destroy(sneakHead.gameObject);
         Destroy(sneakTail.gameObject);
         for(int i = 0; i < sneakSize; i++)
@@ -478,5 +484,15 @@ public class SneakControl : MonoBehaviour
         {
             skinMesh.material = material;
         }
+    }
+
+    public void Respawn()
+    {
+        DestroySneak();
+        if (spawnPoint.y > respawnLevel.position.y)
+            spawnPoint = secondSpawnPoint.position;
+        else
+            spawnPoint = firstSpawnPoint.position;
+        GenerateSneak();
     }
 }
