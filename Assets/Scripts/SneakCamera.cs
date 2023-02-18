@@ -105,7 +105,7 @@ public class SneakCamera : MonoBehaviour
         float mouseWheel = Input.GetAxis("MouseWheel");
         float newDistance = distance - (mouseWheel * scrollSpeed);
 
-        if (newDistance < maxDistance && newDistance > minDistance)
+        if ((newDistance < maxDistance && newDistance > minDistance) && !ui.UiActive)
             distance = newDistance;
     }
 
