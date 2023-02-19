@@ -6,6 +6,7 @@ TagManager:
   tags:
   - Enviroment
   - WaterSoundLevel
+  - TempleGeometry
   layers:
   - Default
   - TransparentFX

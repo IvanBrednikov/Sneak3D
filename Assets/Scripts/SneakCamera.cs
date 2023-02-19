@@ -93,7 +93,8 @@ public class SneakCamera : MonoBehaviour
         for (int i = 0; i < hits.Length; i++)
         {
             if (hits[i].transform.name == "Terrain" || 
-                hits[i].transform.name == "WaterLevel")
+                hits[i].transform.name == "WaterLevel" ||
+                hits[i].transform.tag == "TempleGeometry")
             {
                 if(hits[i].point.y > highestLevel)
                 {

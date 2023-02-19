@@ -23,7 +23,7 @@ public class HeadTrigger : MonoBehaviour
         delayTimer -= Time.deltaTime;
         if(delayTimer <= 0)
         {
-            delayTimer = Random.Range(5, 20);
+            delayTimer = Random.Range(15, 30);
             idleSound.Play();
         }
     }
