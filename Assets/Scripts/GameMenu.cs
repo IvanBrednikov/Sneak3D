@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.Audio;
+using UnityEngine.SceneManagement;
 
 public class GameMenu : MonoBehaviour
 {
@@ -46,6 +47,7 @@ public class GameMenu : MonoBehaviour
     [SerializeField]
     GoalController goalController;
     public bool isFirstPlay = true;
+    public bool loadProgress = true;
     [SerializeField]
     SneakControl sneak;
     public Vector3 playerSpawn;
@@ -62,8 +64,13 @@ public class GameMenu : MonoBehaviour
         LoadSettings();
         gameObject.SetActive(false);
 
-        int firstPlay = PlayerPrefs.GetInt("firstPlay");
-        isFirstPlay = firstPlay == 1;
+        if (PlayerPrefs.HasKey("firstPlay"))
+        {
+            int firstPlay = PlayerPrefs.GetInt("firstPlay");
+            isFirstPlay = firstPlay == 1;
+        }
+        else
+            isFirstPlay = true;
 
         if(isFirstPlay)
         {
@@ -72,8 +79,12 @@ public class GameMenu : MonoBehaviour
         }
         else
         {
-            LoadProgress();
+            if(loadProgress)
+            {
+                LoadProgress();
+            }
             goalController.ShowGoal();
+            enviromentSounds.SetActive(true);
         }     
     }
 
@@ -129,6 +140,17 @@ public class GameMenu : MonoBehaviour
     {
         SaveProgress();
         Application.Quit();
+    }
+
+    public void QuitWithoutSave()
+    {
+        Application.Quit();
+    }
+
+    public void RestartGame()
+    {
+        DeleteProgress();
+        SceneManager.LoadScene("SampleScene");
     }
 
     //Options funtcions
@@ -195,7 +217,7 @@ public class GameMenu : MonoBehaviour
 
     public void LoadSettings()
     {
-        if(PlayerPrefs.HasKey("sens"))
+        if(PlayerPrefs.HasKey("fov"))
         {
             float mouseSense = PlayerPrefs.GetFloat("sens");
             int masterVolume = PlayerPrefs.GetInt("masterV");
@@ -266,7 +288,6 @@ public class GameMenu : MonoBehaviour
         if(isFirstPlay)
         {
             isFirstPlay = false;
-            PlayerPrefs.SetInt("firstPlay", 0);
             Close();
             goalController.ShowGoal();
             enviromentSounds.SetActive(true);
@@ -287,6 +308,7 @@ public class GameMenu : MonoBehaviour
         PlayerPrefs.SetFloat("sneakY", playerPosition.y);
         PlayerPrefs.SetFloat("sneakZ", playerPosition.z);
         PlayerPrefs.SetInt("goal", goal);
+        PlayerPrefs.SetInt("firstPlay", 0);
 
         panel.SaveProgress();
     }
@@ -304,5 +326,15 @@ public class GameMenu : MonoBehaviour
         playerSpawn = playerPosition;
 
         panel.LoadProgress();
+    }
+
+    void DeleteProgress()
+    {
+        PlayerPrefs.DeleteKey("sneakX");
+        PlayerPrefs.DeleteKey("sneakY");
+        PlayerPrefs.DeleteKey("sneakZ");
+        PlayerPrefs.DeleteKey("goal");
+        PlayerPrefs.SetInt("firstPlay", 1);
+        panel.DeleteProgress();
     }
 }

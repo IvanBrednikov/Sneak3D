@@ -125,6 +125,7 @@ public class GoalController : MonoBehaviour
             if (position.y >= hidePos)
             {
                 hiding = false;
+                newGoalPanel.gameObject.SetActive(false);
             }
         }
     }
@@ -157,7 +158,8 @@ public class GoalController : MonoBehaviour
 
     public void NewQuestAnimation()
     {
-        newGoalText.text = "New goal: " + goals[currentGoal];
+        newGoalText.text = "New " + goals[currentGoal];
+        newGoalPanel.gameObject.SetActive(true);
         showing = true;
         hiding = false;
         standing = false;
@@ -167,6 +169,7 @@ public class GoalController : MonoBehaviour
     {
         questCompleteAudio.Play();
         NewQuestAnimation();
+        newGoalPanel.gameObject.SetActive(true);
     }
 
     public int CurrentGoal 

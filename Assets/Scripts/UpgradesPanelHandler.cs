@@ -370,4 +370,19 @@ public class UpgradesPanelHandler : MonoBehaviour
             lengthLevel = 3;
         sneakUpgrades.UpgradeSneakBeforeStart(lengthLevel, swimmingButton.UpgradeApplied, standingButton.UpgradeApplied, climbingButton.UpgradeApplied, lastSkinSelected);
     }
+
+    public void DeleteProgress()
+    {
+        UpgradeButton[] buttons = GetUpgradeButtons;
+
+        for (int i = 0; i < buttons.Length; i++)
+        {
+            string key = "u" + i;
+            PlayerPrefs.DeleteKey(key);
+        }
+
+        PlayerPrefs.DeleteKey("foodT");
+        PlayerPrefs.DeleteKey("foodC");
+        PlayerPrefs.DeleteKey("skin");
+    }
 }
