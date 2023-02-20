@@ -11,6 +11,10 @@ public class GameMenu : MonoBehaviour
     [SerializeField]
     GameObject options;
     [SerializeField]
+    GameObject controls;
+    [SerializeField]
+    Button controlsClose;
+    [SerializeField]
     GameObject quitConfirm;
     [SerializeField]
     Button cancelQuit;
@@ -38,6 +42,18 @@ public class GameMenu : MonoBehaviour
     [SerializeField]
     Dropdown resolutionDrop;
 
+    //сохранения
+    [SerializeField]
+    GoalController goalController;
+    public bool isFirstPlay = true;
+    [SerializeField]
+    SneakControl sneak;
+    public Vector3 playerSpawn;
+    [SerializeField]
+    GameObject enviromentSounds;
+    [SerializeField]
+    UpgradesPanelHandler panel;
+
     private void Start()
     {
         sneakCam = sneakCamera.GetComponent<SneakCamera>();
@@ -45,6 +61,20 @@ public class GameMenu : MonoBehaviour
         SetScreenResolution(resolutionDrop.options.Count - 1);
         LoadSettings();
         gameObject.SetActive(false);
+
+        int firstPlay = PlayerPrefs.GetInt("firstPlay");
+        isFirstPlay = firstPlay == 1;
+
+        if(isFirstPlay)
+        {
+            Open();
+            OpenControls();
+        }
+        else
+        {
+            LoadProgress();
+            goalController.ShowGoal();
+        }     
     }
 
     private void Update()
@@ -97,19 +127,7 @@ public class GameMenu : MonoBehaviour
 
     public void Quit()
     {
-        quitConfirm.SetActive(true);
-        gameObject.SetActive(false);
-        cancelQuit.Select();
-    }
-
-    public void CancelQuit()
-    {
-        quitConfirm.SetActive(false);
-        Open();
-    }
-
-    public void QuitConfirm()
-    {
+        SaveProgress();
         Application.Quit();
     }
 
@@ -234,5 +252,57 @@ public class GameMenu : MonoBehaviour
     public void SetFullScreen(bool value)
     {
         Screen.fullScreen = value;
+    }
+
+    public void OpenControls()
+    {
+        controls.SetActive(true);
+        controlsClose.Select();
+        gameObject.SetActive(false);
+    }
+    
+    public void CloseControls()
+    {
+        if(isFirstPlay)
+        {
+            isFirstPlay = false;
+            PlayerPrefs.SetInt("firstPlay", 0);
+            Close();
+            goalController.ShowGoal();
+            enviromentSounds.SetActive(true);
+        }
+        else
+        {
+            Open();
+        }
+        controls.SetActive(false);
+    }
+
+    void SaveProgress()
+    {
+        Vector3 playerPosition = sneak.HeadPosition();
+        int goal = goalController.CurrentGoal;
+
+        PlayerPrefs.SetFloat("sneakX", playerPosition.x);
+        PlayerPrefs.SetFloat("sneakY", playerPosition.y);
+        PlayerPrefs.SetFloat("sneakZ", playerPosition.z);
+        PlayerPrefs.SetInt("goal", goal);
+
+        panel.SaveProgress();
+    }
+
+    void LoadProgress()
+    {
+        Vector3 playerPosition = new Vector3();
+
+        playerPosition.x = PlayerPrefs.GetFloat("sneakX");
+        playerPosition.y = PlayerPrefs.GetFloat("sneakY") + 2f;
+        playerPosition.z = PlayerPrefs.GetFloat("sneakZ");
+        int goal = PlayerPrefs.GetInt("goal");
+
+        goalController.CurrentGoal = goal;
+        playerSpawn = playerPosition;
+
+        panel.LoadProgress();
     }
 }

@@ -6,7 +6,8 @@ using UnityEngine.EventSystems;
 
 public class UpgradesPanelHandler : MonoBehaviour
 {
-    public int currentPoints = 20;
+    public int totalPoints = 0;
+    public int currentPoints = 0;
     int pointsSpent = 0;
     [SerializeField]
     SneakUpgrades sneakUpgrades;
@@ -151,7 +152,7 @@ public class UpgradesPanelHandler : MonoBehaviour
         gameObject.SetActive(false);
     }
 
-    void ApplyToSneak()
+    public void ApplyToSneak()
     {
         int lengthLevel = 0;
         if (length1Button.UpgradeApplied)
@@ -181,7 +182,9 @@ public class UpgradesPanelHandler : MonoBehaviour
         //определение активности кнопок
         for (int i = 0; i < buttons.Length; i++)
         {
-            if (freePoints < buttons[i].UpgradeCost && !buttons[i].UpgradeApplied && !buttons[i].UpgradeSelected)
+            if (freePoints < buttons[i].UpgradeCost //если не хватает очков
+                && !buttons[i].UpgradeApplied //и апгрейд не принят
+                && !buttons[i].UpgradeSelected) //и апгрейд не выделен
                 buttons[i].interactable = false;
             else
                 buttons[i].interactable = true;
@@ -287,6 +290,20 @@ public class UpgradesPanelHandler : MonoBehaviour
             lastSkinSelected = "skin5";
     }
 
+    void SetButtonSkinSelected()
+    {
+        if (lastSkinSelected == "skin1")
+            skin1Button.UpgradeSelected = true;
+        if (lastSkinSelected == "skin2")
+            skin2Button.UpgradeSelected = true;
+        if (lastSkinSelected == "skin3")
+            skin3Button.UpgradeSelected = true;
+        if (lastSkinSelected == "skin4")
+            skin4Button.UpgradeSelected = true;
+        if (lastSkinSelected == "skin5")
+            skin5Button.UpgradeSelected = true;
+    }
+
     void DeselectAppliedSkins()
     {
         if(skin1Button.UpgradeApplied && lastSkinSelected != "skin1")
@@ -304,5 +321,53 @@ public class UpgradesPanelHandler : MonoBehaviour
     public void FoodAdd(int value)
     {
         currentPoints += value;
+        totalPoints += value;
+    }
+
+    public void SaveProgress()
+    {
+        UpgradeButton[] buttons = GetUpgradeButtons;
+
+        for(int i = 0; i < buttons.Length; i++)
+        {
+            string key = "u" + i;
+            int value = buttons[i].UpgradeApplied ? 1 : 0;
+            PlayerPrefs.SetInt(key, value);
+        }
+        PlayerPrefs.SetInt("foodT", totalPoints);
+        PlayerPrefs.SetInt("foodC", currentPoints);
+        PlayerPrefs.SetString("skin", lastSkinSelected);
+    }
+
+    public void LoadProgress()
+    {
+        UpgradeButton[] buttons = GetUpgradeButtons;
+
+        for(int i = 0; i < buttons.Length; i++)
+        {
+            string key = "u" + i;
+            bool value = PlayerPrefs.GetInt(key) == 1;
+            if(value)
+            {
+                buttons[i].UpgradeApply();
+                if (!buttons[i].IsSkinButton)
+                    buttons[i].UpgradeSelected = true;
+            }
+        }
+
+        totalPoints = PlayerPrefs.GetInt("foodT");
+        currentPoints = PlayerPrefs.GetInt("foodC");
+        lastSkinSelected = PlayerPrefs.GetString("skin");
+        SetButtonSkinSelected();
+        ButtonsActivating();
+
+        int lengthLevel = 0;
+        if (length1Button.UpgradeApplied)
+            lengthLevel = 1;
+        if (length2Button.UpgradeApplied)
+            lengthLevel = 2;
+        if (length3Button.UpgradeApplied)
+            lengthLevel = 3;
+        sneakUpgrades.UpgradeSneakBeforeStart(lengthLevel, swimmingButton.UpgradeApplied, standingButton.UpgradeApplied, climbingButton.UpgradeApplied, lastSkinSelected);
     }
 }

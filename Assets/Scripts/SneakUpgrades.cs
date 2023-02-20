@@ -37,6 +37,10 @@ public class SneakUpgrades : MonoBehaviour
     [SerializeField]
     Material[] length3Skins;
 
+    //savedGame
+    bool canClimbing;
+    bool canStanding;
+    public Material savedSneakSkin;
 
     private void Start()
     {
@@ -146,5 +150,24 @@ public class SneakUpgrades : MonoBehaviour
         }
 
         return result;
+    }
+
+    public void UpgradeSneakBeforeStart(int lengthLevel, bool swimming, bool standing, bool climbing, string skin)
+    {
+        currentLengthLevel = lengthLevel;
+        this.canClimbing = climbing;
+        this.canStanding = standing;
+        this.skin = skin;
+
+        if (swimmingObstacle != null)
+            swimmingObstacle.SetActive(!swimming);
+
+        savedSneakSkin = GetMaterialSkin(skin);
+    }
+
+    public void SavedUpgradeApplyOnStart()
+    {
+        sneak.canClimbing = canClimbing;
+        sneak.canStanding = canStanding;
     }
 }

@@ -14,6 +14,7 @@ GameObject:
   - component: {fileID: 7174734291613783673}
   - component: {fileID: 7174734291613783666}
   - component: {fileID: -2349374086974123186}
+  - component: {fileID: 5083914368810602734}
   m_Layer: 0
   m_Name: Sneak Head 2
   m_TagString: Player
@@ -130,6 +131,19 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   lastHeadCollision: {fileID: 0}
+--- !u!114 &5083914368810602734
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7174734291613783672}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: cd23c34606bf4f24a8c21bec22f36a47, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  goalController: {fileID: 0}
 --- !u!1 &8043454708730400653
 GameObject:
   m_ObjectHideFlags: 0

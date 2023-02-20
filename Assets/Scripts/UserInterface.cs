@@ -11,6 +11,8 @@ public class UserInterface : MonoBehaviour
     GameObject options;
     [SerializeField]
     GameObject quitConfirm;
+    [SerializeField]
+    GameObject controls;
 
     void Update()
     {
@@ -24,6 +26,11 @@ public class UserInterface : MonoBehaviour
         if (Input.GetButtonDown("Cancel") && options.activeSelf)
         {
             gameMenu.CloseOptions();
+        }
+
+        if (Input.GetButtonDown("Cancel") && controls.activeSelf)
+        {
+            gameMenu.CloseControls();
         }
 
         if (Input.GetButtonDown("UpgradesPanelOpen") && !upgradesPanel.gameObject.activeSelf && !gameMenu.gameObject.activeSelf && !options.activeSelf)
@@ -40,7 +47,8 @@ public class UserInterface : MonoBehaviour
                 gameMenu.gameObject.activeSelf || 
                 upgradesPanel.gameObject.activeSelf || 
                 options.activeSelf || 
-                quitConfirm.activeSelf;
+                quitConfirm.activeSelf ||
+                controls.activeSelf;
         }
     }
 }

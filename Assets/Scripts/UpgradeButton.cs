@@ -119,4 +119,5 @@ public class UpgradeButton : Button
         foodCostText.gameObject.SetActive(false);
     }
 
+    public bool IsSkinButton { get { return skinButton; } }
 }

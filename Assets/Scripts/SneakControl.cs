@@ -37,7 +37,11 @@ public class SneakControl : MonoBehaviour
     [SerializeField]
     Transform respawnLevel;
     SneakUpgrades upgrades;
-    Vector3 spawnPoint;
+    [SerializeField]
+    GameMenu gameMenu;
+    [SerializeField]
+    UpgradesPanelHandler panel;
+    public Vector3 spawnPoint;
     [SerializeField]
     bool isGenerated;
     [SerializeField]
@@ -105,9 +109,19 @@ public class SneakControl : MonoBehaviour
         upgrades = GetComponent<SneakUpgrades>();
         skinMesh = GetComponentInChildren<SkinnedMeshRenderer>();
 
+        if (!gameMenu.isFirstPlay)
+        {
+            spawnPoint = gameMenu.playerSpawn;
+            upgrades.SavedUpgradeApplyOnStart();
+        }
+
         if (isGenerated)
         {
             GenerateSneak();
+            if(!gameMenu.isFirstPlay)
+            {
+                SetMaterial(upgrades.savedSneakSkin);
+            }
         }
         else
         {
@@ -494,5 +508,10 @@ public class SneakControl : MonoBehaviour
         else
             spawnPoint = firstSpawnPoint.position;
         GenerateSneak();
+    }
+
+    public Vector3 HeadPosition()
+    {
+        return sneakHead.transform.position;
     }
 }
