@@ -87,6 +87,10 @@ public class SneakControl : MonoBehaviour
     GameObject targetPositionDebug;
     [SerializeField]
     float mouseSenseControlSpacing;
+    [SerializeField]
+    GameObject bodyFixLight;
+    [SerializeField]
+    bool canChangeBodySupport;
 
     //для механики взбирания на дерево
     public bool canClimbing;
@@ -94,6 +98,8 @@ public class SneakControl : MonoBehaviour
     bool headFixed;
     FixedJoint headJoint;
     Collider lastHeadCollision;
+    [SerializeField]
+    GameObject headFixLight;
 
     //для скина змейки
     [SerializeField]
@@ -147,7 +153,7 @@ public class SneakControl : MonoBehaviour
 
     void Update()
     {
-        if(!sneakInterface.UiActive)
+        if (!sneakInterface.UiActive)
         {
             isMoving = Input.GetButton("Fire1");
             if (isMoving)
@@ -177,7 +183,7 @@ public class SneakControl : MonoBehaviour
             headRotationSphere.transform.position = bodySupportObject.transform.position;
             //sneakHead trigger
             BodySupport bodySupport = bodySupportObject.GetComponent<BodySupport>();
-            if (sneakHeadSpacing != Input.GetButton("Fire2"))
+            if (sneakHeadSpacing != Input.GetButton("Fire2") && canStanding)
             {
                 if (sneakHeadSpacing)
                 {
@@ -191,6 +197,15 @@ public class SneakControl : MonoBehaviour
             }
             if (sneakHeadSpacing && !bodySupport.JointIsSet)
                 bodySupport.SetJoint();
+
+            if (bodySupport.JointIsSet)
+            {
+                bodyFixLight.SetActive(true);
+                bodyFixLight.transform.position = bodySupport.transform.position;
+            }
+            else
+                bodyFixLight.SetActive(false);
+                
 
             if (canStanding)
                 sneakHeadSpacing = Input.GetButton("Fire2");
@@ -232,22 +247,28 @@ public class SneakControl : MonoBehaviour
             {
                 if (headJoint == null)
                     SetHeadJoint();
+                else
+                    headFixLight.SetActive(true);
+                headFixLight.transform.position = sneakHead.position;
             }
             else
             {
                 DestroyHeadJoint();
+                headFixLight.SetActive(false);
             }
 
-            if (Input.GetButtonDown("NextSupportBoddy"))
+            if (Input.GetButtonDown("NextSupportBoddy") && canChangeBodySupport)
             {
                 SetNewSupportBody(bodySupportPoint + 1);
             }
 
-            if (Input.GetButtonDown("PreviousSupportBoddy"))
+            if (Input.GetButtonDown("PreviousSupportBoddy") && canChangeBodySupport)
             {
                 SetNewSupportBody(bodySupportPoint - 1);
             }
         }
+        else
+            isMoving = false;
     }
 
     private void FixedUpdate()
@@ -294,7 +315,8 @@ public class SneakControl : MonoBehaviour
         targetPositionDebug.transform.position = targetHeadPosition;
 
         //выполнение перемещения в ту точку куда стремиться голова
-        if (sneakHeadSpacing)
+        BodySupport bodySupport = bodySupportObject.GetComponent<BodySupport>();
+        if (sneakHeadSpacing && bodySupport.JointIsSet)
         {
             Vector3 relativeForce = targetHeadPosition - sneakHead.transform.position;
             sneakHead.AddForce(relativeForce * headSpacingForce);
@@ -308,7 +330,9 @@ public class SneakControl : MonoBehaviour
             MeshRenderer mesh;
             if (bodySupportObject != null)
             {
-                Destroy(bodySupportObject.GetComponent<BodySupport>());
+                BodySupport bodySup = bodySupportObject.GetComponent<BodySupport>();
+                bodySup.DestroyJoint();
+                Destroy(bodySup);
                 mesh = bodySupportObject.GetComponent<MeshRenderer>();
                 mesh.material = defaultBodyMaterial;
             }
@@ -319,6 +343,7 @@ public class SneakControl : MonoBehaviour
             bodySupportObject.AddComponent<BodySupport>();
             mesh = bodySupportObject.GetComponent<MeshRenderer>();
             mesh.material = supportBodyMaterial;
+            bodySupportObject.GetComponent<Rigidbody>().WakeUp();
         }
     }
 
@@ -442,6 +467,8 @@ public class SneakControl : MonoBehaviour
 
         //камера
         bodyCameraCenter = sneakSize / 2;
+        if (upgrades.currentLengthLevel == 3)
+            bodyCameraCenter = 12;
         rotationSphere.GetComponentInChildren<SneakCamera>().viewObject = sneakBody[bodyCameraCenter].gameObject;
         //позвонок для опоры
         SetNewSupportBody(sneakSize / 2);
@@ -503,11 +530,23 @@ public class SneakControl : MonoBehaviour
     public void Respawn()
     {
         DestroySneak();
-        if (spawnPoint.y > respawnLevel.position.y)
+        GoalController goal = FindObjectOfType<GoalController>();
+        if (spawnPoint.y > respawnLevel.position.y || goal.treeTriggerActivated)
             spawnPoint = secondSpawnPoint.position;
         else
             spawnPoint = firstSpawnPoint.position;
         GenerateSneak();
+        Material material = upgrades.GetMaterialSkin(upgrades.skin);
+        SetMaterial(material);
+    }
+
+    public void RespawnAt(Vector3 point)
+    {
+        DestroySneak();
+        spawnPoint = point;
+        GenerateSneak();
+        Material material = upgrades.GetMaterialSkin(upgrades.skin);
+        SetMaterial(material);
     }
 
     public Vector3 HeadPosition()

@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.Localization.Settings;
 
 public class GoalController : MonoBehaviour
 {
@@ -13,13 +14,14 @@ public class GoalController : MonoBehaviour
 {
 "Goal: Collect 20 food",
 "Goal: Make upgrade \"Climbing\"",
-"Goal: Get up on the Great Tree",
+"Goal: Get up on the hill by the Great Tree",
 "Goal: Find enter to the temple",
-"Goal: Activate 3 pressure plates",
+"Goal: Find and activate 3 pressure plates",
 "Goal: Get into the temple",
 "Goal: Complete puzzle",
 "Game end!"
 };
+
 
     //для отслеживания целей
     [SerializeField]
@@ -30,6 +32,7 @@ public class GoalController : MonoBehaviour
     TempleDoorPlate[] plates;
     [SerializeField]
     PuzzleController puzzle;
+    public bool treeTriggerActivated = false;
 
     //анимация и звук нового задания
     [SerializeField]
@@ -48,7 +51,7 @@ public class GoalController : MonoBehaviour
     bool showing;
     bool standing;
     [SerializeField]
-    float standingTime = 5f;
+    float standingTime = 8f;
     float standingTimer;
 
     private void Start()
@@ -135,7 +138,8 @@ public class GoalController : MonoBehaviour
         if(currentGoal == goalNumb - 1)
         {
             currentGoal = goalNumb;
-            goalText.text = goals[goalNumb];
+            string goal = LocalizationSettings.StringDatabase.GetLocalizedString("SneakLocalization", "key_goal");
+            goalText.text = goal + ": " + GetLocalizedGoal(currentGoal);
             questCompleteAudio.Play();
             NewQuestAnimation();
         }
@@ -158,7 +162,9 @@ public class GoalController : MonoBehaviour
 
     public void NewQuestAnimation()
     {
-        newGoalText.text = "New " + goals[currentGoal];
+        string newGoal = LocalizationSettings.StringDatabase.GetLocalizedString("SneakLocalization", "key_newgoal");
+        string tab = LocalizationSettings.StringDatabase.GetLocalizedString("SneakLocalization", "key_pressTab");
+        newGoalText.text = newGoal + ": " + GetLocalizedGoal(CurrentGoal) + ". " + tab;
         newGoalPanel.gameObject.SetActive(true);
         showing = true;
         hiding = false;
@@ -180,5 +186,10 @@ public class GoalController : MonoBehaviour
             currentGoal = value;
             goalText.text = goals[value];
         } 
+    }
+
+    public string GetLocalizedGoal(int goal)
+    {
+        return LocalizationSettings.StringDatabase.GetLocalizedString("SneakLocalization", "key_goal"+goal);
     }
 }

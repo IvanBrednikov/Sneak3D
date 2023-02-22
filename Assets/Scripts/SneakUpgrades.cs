@@ -104,7 +104,7 @@ public class SneakUpgrades : MonoBehaviour
         sneak.SetMaterial(mat);
     }
 
-    Material GetMaterialSkin(string skin)
+    public Material GetMaterialSkin(string skin)
     {
         Material result = defaultSkin;
 

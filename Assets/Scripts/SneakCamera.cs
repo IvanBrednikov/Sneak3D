@@ -81,7 +81,9 @@ public class SneakCamera : MonoBehaviour
         RaycastHit[] hits = Physics.RaycastAll(rotationSphere.transform.position, rotationSphere.transform.TransformDirection(new Vector3(0f, 0f, -1)), distance);
 
         for (int i = 0; i < hits.Length; i++)
-            if (otherCollider != null && hits[i].collider.name == otherCollider.name)
+            if (otherCollider != null
+                && hits[i].collider.name == otherCollider.name 
+                && hits[i].collider.tag != "Obstacle")
             {
                 cuttedDistance = hits[i].distance;
                 break;
@@ -96,7 +98,7 @@ public class SneakCamera : MonoBehaviour
                 hits[i].transform.name == "WaterLevel" ||
                 hits[i].transform.tag == "TempleGeometry")
             {
-                if(hits[i].point.y > highestLevel)
+                if(hits[i].point.y > highestLevel && !hits[i].collider.isTrigger && hits[i].collider.tag != "Obstacle")
                 {
                     cuttedDistance = hits[i].distance - 1f;
                     highestLevel = hits[i].point.y;

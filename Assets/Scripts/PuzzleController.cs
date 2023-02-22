@@ -6,13 +6,16 @@ public class PuzzleController : MonoBehaviour
 {
     [SerializeField]
     RollingBlockControl[] rollBlocks;
+    int maxVariansts = 4;
     int condition = 2;
     [SerializeField]
     PuzzleDoor door;
 
     private void Start()
     {
-        GeneratePuzzle();
+        GenerateRandomPuzzle();
+        for(int i = 0; i < rollBlocks.Length; i++)
+            Debug.Log(rollBlocks[i].State);
     }
 
     private void Update()
@@ -32,6 +35,12 @@ public class PuzzleController : MonoBehaviour
                 result = false;
 
         return result;
+    }
+
+    void GenerateRandomPuzzle()
+    {
+        for(int i = 0; i < rollBlocks.Length; i++)
+            rollBlocks[i].SetState(Random.Range(0, maxVariansts));
     }
 
     void GeneratePuzzle()
@@ -74,7 +83,13 @@ public class PuzzleController : MonoBehaviour
 
     public void Plate3Press()
     {
+        rollBlocks[1].PlusState();
         rollBlocks[2].PlusState();
         rollBlocks[3].PlusState();
+    }
+
+    public void Plate4Press()
+    {
+        rollBlocks[1].PlusState();
     }
 }

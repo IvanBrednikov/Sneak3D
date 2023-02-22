@@ -4,6 +4,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.Audio;
 using UnityEngine.SceneManagement;
+using UnityEngine.Localization.Settings; 
 
 public class GameMenu : MonoBehaviour
 {
@@ -260,15 +261,21 @@ public class GameMenu : MonoBehaviour
     {
         Resolution[] resolutions = Screen.resolutions;
         List<Dropdown.OptionData> options = new List<Dropdown.OptionData>();
+        int curreResItem = -1;
 
         for (int i = 0; i < resolutions.Length; i++)
         {
             string str = $"{resolutions[i].width}x{resolutions[i].height} {resolutions[i].refreshRate}hz";
             Dropdown.OptionData data = new Dropdown.OptionData(str);
             options.Add(data);
+            if (resolutions[i].width == Screen.currentResolution.width &&
+                resolutions[i].height == Screen.currentResolution.height &&
+                resolutions[i].refreshRate == Screen.currentResolution.refreshRate)
+                curreResItem = i;
         }
 
         resolutionDrop.options = options;
+        resolutionDrop.value = curreResItem;
     }
 
     public void SetFullScreen(bool value)
@@ -336,5 +343,10 @@ public class GameMenu : MonoBehaviour
         PlayerPrefs.DeleteKey("goal");
         PlayerPrefs.SetInt("firstPlay", 1);
         panel.DeleteProgress();
+    }
+
+    public void SelectLocale(int value)
+    {
+        LocalizationSettings.SelectedLocale = LocalizationSettings.AvailableLocales.Locales[value]; //0 - en, 1 -ru
     }
 }

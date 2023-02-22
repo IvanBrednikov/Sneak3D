@@ -32,7 +32,9 @@ public class BodySupport : MonoBehaviour
     private void OnCollisionStay(Collision collision)
     {
         if (collision.collider.tag == "Enviroment")
+        {
             lastCollision = collision.collider;
+        }
     }
 
     private void OnCollisionExit(Collision collision)

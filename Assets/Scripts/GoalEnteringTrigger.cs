@@ -17,6 +17,7 @@ public class GoalEnteringTrigger : MonoBehaviour
         if(other.name == "TreeTrigger")
         {
             goalController.TreeTriggerReact();
+            goalController.treeTriggerActivated = true;
         }
 
         if(other.name == "TempleTrigger")

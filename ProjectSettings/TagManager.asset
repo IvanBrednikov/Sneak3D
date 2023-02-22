@@ -7,15 +7,16 @@ TagManager:
   - Enviroment
   - WaterSoundLevel
   - TempleGeometry
+  - Obstacle
   layers:
   - Default
   - TransparentFX
   - Ignore Raycast
-  - 
+  - Bashes
   - Water
   - UI
-  - 
-  - 
+  - Player
+  - PostProcess
   - 
   - 
   - 

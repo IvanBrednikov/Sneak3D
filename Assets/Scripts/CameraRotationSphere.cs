@@ -22,7 +22,7 @@ public class CameraRotationSphere : MonoBehaviour
 
     private void OnTriggerStay(Collider other)
     {
-        if(other.name != "Terrain")
+        if(other.name != "Terrain" && !other.isTrigger && other.tag != "Obstacle")
             otherCollider = other;
     }
 

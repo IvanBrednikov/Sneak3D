@@ -1,0 +1,256 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5b11a58205ec3474ca216360e9fa74a8, type: 3}
+  m_Name: SneakLocalization Shared Data
+  m_EditorClassIdentifier: 
+  m_TableCollectionName: SneakLocalization
+  m_TableCollectionNameGuidString: e15fbc386e63a3c40bb83456297292e6
+  m_Entries:
+  - m_Id: 451239649280
+    m_Key: resume
+    m_Metadata:
+      m_Items: []
+  - m_Id: 9301044928512
+    m_Key: key_russian
+    m_Metadata:
+      m_Items: []
+  - m_Id: 9344107847680
+    m_Key: key_english
+    m_Metadata:
+      m_Items: []
+  - m_Id: 9661847347200
+    m_Key: key_language
+    m_Metadata:
+      m_Items: []
+  - m_Id: 10863209259008
+    m_Key: key_resolution
+    m_Metadata:
+      m_Items: []
+  - m_Id: 10981685764096
+    m_Key: key_graphic
+    m_Metadata:
+      m_Items: []
+  - m_Id: 11097029124096
+    m_Key: key_fov
+    m_Metadata:
+      m_Items: []
+  - m_Id: 11169292787712
+    m_Key: key_masterVolume
+    m_Metadata:
+      m_Items: []
+  - m_Id: 11267045236736
+    m_Key: key_envVol
+    m_Metadata:
+      m_Items: []
+  - m_Id: 11363958824960
+    m_Key: key_effVol
+    m_Metadata:
+      m_Items: []
+  - m_Id: 11441113047040
+    m_Key: key_sens
+    m_Metadata:
+      m_Items: []
+  - m_Id: 12001061019648
+    m_Key: key_fullScreen
+    m_Metadata:
+      m_Items: []
+  - m_Id: 13286694887424
+    m_Key: key_options
+    m_Metadata:
+      m_Items: []
+  - m_Id: 13419914371072
+    m_Key: key_respawn
+    m_Metadata:
+      m_Items: []
+  - m_Id: 13668754038784
+    m_Key: key_tutor
+    m_Metadata:
+      m_Items: []
+  - m_Id: 13809502298112
+    m_Key: key_restart
+    m_Metadata:
+      m_Items: []
+  - m_Id: 13900283813888
+    m_Key: key_exitNoSave
+    m_Metadata:
+      m_Items: []
+  - m_Id: 14008865955840
+    m_Key: key_saveExit
+    m_Metadata:
+      m_Items: []
+  - m_Id: 14086909370368
+    m_Key: key_controls
+    m_Metadata:
+      m_Items: []
+  - m_Id: 14728751128576
+    m_Key: key_length1
+    m_Metadata:
+      m_Items: []
+  - m_Id: 14809244016640
+    m_Key: key_length2
+    m_Metadata:
+      m_Items: []
+  - m_Id: 14881256022016
+    m_Key: key_length3
+    m_Metadata:
+      m_Items: []
+  - m_Id: 14965477646336
+    m_Key: key_swimming
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15032729116672
+    m_Key: key_standing
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15182960697344
+    m_Key: key_climbing
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15234147983360
+    m_Key: skin1
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15374304845824
+    m_Key: skin2
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15427434094592
+    m_Key: skin3
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15500545007616
+    m_Key: skin4
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15549526089728
+    m_Key: key_goal
+    m_Metadata:
+      m_Items: []
+  - m_Id: 16230567813120
+    m_Key: key_gamepad
+    m_Metadata:
+      m_Items: []
+  - m_Id: 16402773352448
+    m_Key: key_keyboard
+    m_Metadata:
+      m_Items: []
+  - m_Id: 16471685767168
+    m_Key: key_tutr1
+    m_Metadata:
+      m_Items: []
+  - m_Id: 16663331905536
+    m_Key: key_tutr2
+    m_Metadata:
+      m_Items: []
+  - m_Id: 16752406339584
+    m_Key: key_tutr3
+    m_Metadata:
+      m_Items: []
+  - m_Id: 16967473471488
+    m_Key: key_tutr4
+    m_Metadata:
+      m_Items: []
+  - m_Id: 17102882381824
+    m_Key: key_a
+    m_Metadata:
+      m_Items: []
+  - m_Id: 17263331287040
+    m_Key: key_d
+    m_Metadata:
+      m_Items: []
+  - m_Id: 17383682646016
+    m_Key: key_fix
+    m_Metadata:
+      m_Items: []
+  - m_Id: 17980863455232
+    m_Key: key_upgrades
+    m_Metadata:
+      m_Items: []
+  - m_Id: 18260753555456
+    m_Key: key_gameMenu
+    m_Metadata:
+      m_Items: []
+  - m_Id: 18332438405120
+    m_Key: key_confirm
+    m_Metadata:
+      m_Items: []
+  - m_Id: 18429356187648
+    m_Key: key_tutr5
+    m_Metadata:
+      m_Items: []
+  - m_Id: 18670809686016
+    m_Key: key_tutr6
+    m_Metadata:
+      m_Items: []
+  - m_Id: 18816918265856
+    m_Key: key_move
+    m_Metadata:
+      m_Items: []
+  - m_Id: 18978768068608
+    m_Key: key_moveSneakAndCam
+    m_Metadata:
+      m_Items: []
+  - m_Id: 19194703421440
+    m_Key: key_gameend
+    m_Metadata:
+      m_Items: []
+  - m_Id: 24212114415616
+    m_Key: key_newgoal
+    m_Metadata:
+      m_Items: []
+  - m_Id: 24892350832640
+    m_Key: key_goal0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 24952543289344
+    m_Key: key_goal1
+    m_Metadata:
+      m_Items: []
+  - m_Id: 26531891683328
+    m_Key: key_goal2
+    m_Metadata:
+      m_Items: []
+  - m_Id: 26579274735616
+    m_Key: key_goal3
+    m_Metadata:
+      m_Items: []
+  - m_Id: 26615047954432
+    m_Key: key_goal4
+    m_Metadata:
+      m_Items: []
+  - m_Id: 26648216510464
+    m_Key: key_goal5
+    m_Metadata:
+      m_Items: []
+  - m_Id: 26687026405376
+    m_Key: key_goal6
+    m_Metadata:
+      m_Items: []
+  - m_Id: 26723810451456
+    m_Key: key_goal7
+    m_Metadata:
+      m_Items: []
+  - m_Id: 27607911014400
+    m_Key: key_pressTab
+    m_Metadata:
+      m_Items: []
+  m_Metadata:
+    m_Items: []
+  m_KeyGenerator:
+    rid: 3110302302586011673
+  references:
+    version: 2
+    RefIds:
+    - rid: 3110302302586011673
+      type: {class: DistributedUIDGenerator, ns: UnityEngine.Localization.Tables, asm: Unity.Localization}
+      data:
+        m_CustomEpoch: 1677074880682
