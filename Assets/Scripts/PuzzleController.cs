@@ -14,8 +14,6 @@ public class PuzzleController : MonoBehaviour
     private void Start()
     {
         GenerateRandomPuzzle();
-        for(int i = 0; i < rollBlocks.Length; i++)
-            Debug.Log(rollBlocks[i].State);
     }
 
     private void Update()

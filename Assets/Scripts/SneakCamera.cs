@@ -109,6 +109,9 @@ public class SneakCamera : MonoBehaviour
         transform.localPosition = new Vector3(transform.localPosition.x, transform.localPosition.y, -cuttedDistance);
 
         float mouseWheel = Input.GetAxis("MouseWheel");
+        float mouseWheelAlt = Input.GetAxis("MouseWheelAlt");
+        if (mouseWheelAlt != 0)
+            mouseWheel = mouseWheelAlt;
         float newDistance = distance - (mouseWheel * scrollSpeed);
 
         if ((newDistance < maxDistance && newDistance > minDistance) && !ui.UiActive)

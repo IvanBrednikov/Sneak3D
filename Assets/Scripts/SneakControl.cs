@@ -553,4 +553,6 @@ public class SneakControl : MonoBehaviour
     {
         return sneakHead.transform.position;
     }
+
+    public float MouseSense { get { return mouseSenseControlSpacing; } set { mouseSenseControlSpacing = value; } }
 }

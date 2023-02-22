@@ -77,7 +77,8 @@ public class GoalController : MonoBehaviour
             for (int i = 0; i < plates.Length; i++)
                 if (plates[i].isActive)
                     activatedPlates++;
-            goalText.text = goals[4] + $" ({activatedPlates}/3)";
+            string goal = LocalizationSettings.StringDatabase.GetLocalizedString("SneakLocalization", "key_goal");
+            goalText.text = goal + ": " + GetLocalizedGoal(4) + $" ({activatedPlates}/3)";
             
             if(activatedPlates == plates.Length)
             {
@@ -87,7 +88,8 @@ public class GoalController : MonoBehaviour
 
         if(currentGoal == 0)
         {
-            goalText.text = goals[0] + $" ({panel.totalPoints}/20)";
+            string goal = LocalizationSettings.StringDatabase.GetLocalizedString("SneakLocalization", "key_goal");
+            goalText.text = goal + ": " + GetLocalizedGoal(0) + $" ({panel.totalPoints}/20)";
         }
 
         if(puzzle.CheckCondition())

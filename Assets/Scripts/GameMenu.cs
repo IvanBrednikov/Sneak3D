@@ -24,6 +24,8 @@ public class GameMenu : MonoBehaviour
     Camera sneakCamera;
     SneakCamera sneakCam;
     [SerializeField]
+    Camera secondCamera;
+    [SerializeField]
     InputField mouseSenseField;
     [SerializeField]
     AudioMixer audioMixer;
@@ -158,6 +160,7 @@ public class GameMenu : MonoBehaviour
     public void SetFieldOfView(float value)
     {
         sneakCamera.fieldOfView = value;
+        secondCamera.fieldOfView = value;
     }
 
     public void SetMouseSensevity(string value)
@@ -167,6 +170,7 @@ public class GameMenu : MonoBehaviour
         if(float.TryParse(value, out sense))
         {
             sneakCam.SetMouseSensevity(sense);
+            sneak.MouseSense = sense;
         }
         else
         {

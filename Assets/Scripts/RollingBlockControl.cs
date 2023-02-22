@@ -28,7 +28,6 @@ public class RollingBlockControl : MonoBehaviour
                 virtState = maxVariants + newState;
             int diff = virtState - state;
 
-            Debug.Log(name + " diff = " + diff);
             for (int i = 0; i < diff; i++)
                 PlusState();
         }
