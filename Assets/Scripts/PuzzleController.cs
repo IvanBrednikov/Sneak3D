@@ -37,8 +37,21 @@ public class PuzzleController : MonoBehaviour
 
     void GenerateRandomPuzzle()
     {
+        bool puzzleIsDone = true;
         for(int i = 0; i < rollBlocks.Length; i++)
+        {
             rollBlocks[i].SetState(Random.Range(0, maxVariansts));
+            if (rollBlocks[i].State != condition)
+                puzzleIsDone = false;
+        }
+
+        if(puzzleIsDone)
+        {
+            rollBlocks[0].SetState(0);
+            rollBlocks[1].SetState(1);
+            rollBlocks[2].SetState(3);
+            rollBlocks[3].SetState(1);
+        }
     }
 
     void GeneratePuzzle()

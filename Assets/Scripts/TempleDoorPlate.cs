@@ -11,6 +11,8 @@ public class TempleDoorPlate : MonoBehaviour
     MeshRenderer lamp;
     [SerializeField]
     Material lampActive;
+    [SerializeField]
+    GameObject effect;
 
     private void Start()
     {
@@ -21,5 +23,6 @@ public class TempleDoorPlate : MonoBehaviour
     {
         isActive = true;
         lamp.material = lampActive;
+        effect.SetActive(false);
     }
 }
