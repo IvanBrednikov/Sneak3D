@@ -16,7 +16,11 @@ MonoBehaviour:
   m_Data:
     m_SerializedData: []
   m_GUID: 9236a3c1bf7723b4a8def1a37a432369
-  m_SerializeEntries: []
+  m_SerializeEntries:
+  - m_GUID: 3bbd7fbd537ba9c49a22b56d502175c0
+    m_Address: Assets/GUI/Apple.png
+    m_ReadOnly: 0
+    m_SerializedLabels: []
   m_ReadOnly: 0
   m_Settings: {fileID: 11400000, guid: b7d9680b172db6644a1032577f9e68dc, type: 2}
   m_SchemaSet:
